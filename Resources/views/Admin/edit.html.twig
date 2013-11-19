@@ -1,0 +1,58 @@
+{% extends context == 'full' ? 'MajesCoreBundle::layout.html.twig' : 'MajesCoreBundle::ajax.html.twig' %}
+
+{% block title %}MajesCore - Roles{% endblock %}
+
+{% block content_header '' %}
+
+{% block content %}
+<div class="container-fluid main-content">
+	
+	{% if context == 'full' %}
+	{{ include(
+                'MajesCoreBundle:common:breadcrumbs.html.twig'
+            ) }}
+    {% endif %}
+
+    <div class="page-title">
+      <h1>{% trans %}%pageTitle%{% endtrans %}</h1>
+    </div>
+
+    <div class="row">
+		<div class="col-lg-12">
+	    	<div class="widget-container fluid-height clearfix">
+
+	    		<div class="heading">
+	        		<i class="icon-user"></i> {% trans %}%pageSubTitle%{% endtrans %}
+	        	</div>
+	
+				{% form_theme form 'MajesCoreBundle:Form:fields.html.twig' %}
+	        	{{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+	        	<div class="col-md-3">
+					
+	      		</div>
+	    		<div class="col-md-6">
+	        		
+	        		<div class="widget-content padded">
+	        	  		
+						{{ form_errors(form) }}
+	        			{{ form_widget(form) }}
+	
+	        	  		<div class="form-actions col-lg-offset-3 col-lg-9">
+	        	    		<input type="submit" class="btn btn-primary" value="{% trans %}Submit{% endtrans %}" />
+	        	    		{% if context == 'full' %}
+	        	    		<a href="{{ path('_media_list') }}" class="btn btn-default-outline">{% trans %}Cancel{% endtrans %}</a>
+	        	    		{% else %}<a href="{{ path('_media_picker', {'context': context}) }}" class="btn btn-default-outline">{% trans %}Cancel{% endtrans %}</a>
+	        	    		{% endif %}
+	        	  		</div> 
+						
+	        		</div>
+	      		</div>
+	      		{{ form_end(form) }}
+	      	</div>
+	    </div>
+	</div>
+
+</div>
+
+
+{% endblock %}

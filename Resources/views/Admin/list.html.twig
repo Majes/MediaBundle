@@ -1,0 +1,75 @@
+{% extends 'MajesCoreBundle::layout.html.twig' %}
+
+{% block title %}MajesCore - Media list{% endblock %}
+
+{% block content_header '' %}
+
+{% block content %}
+	
+<div class="container-fluid main-content">
+
+	{{ include(
+                'MajesCoreBundle:common:breadcrumbs.html.twig'
+            ) }}
+
+    <div class="page-title">
+      <h1>{% trans %}%pageTitle%{% endtrans %}</h1>
+    </div>
+	 <div class="row">
+		
+        <form action="{{ path('_media_list') }}" method="get" id="formFilter">
+            <input type="hidden" name="page" value="{{ page }}"/>
+            {{ include('MajesMediaBundle:Admin:parts/filters.html.twig') }}  
+        </form>
+
+        <!-- Gallery with filtering and actions -->
+        <div class="col-lg-9">
+          	<div class="widget-container fluid-height">
+            	<div class="heading">
+              		<i class="icon-th-large"></i> Media list
+              		<a href="{{ path('_media_edit') }}" class="btn btn-success-outline pull-right"><i class="icon-plus"></i>Add new</a>
+            	</div>
+            	<div class="widget-content padded">
+              		<div class="gallery-container" id="mediaResultsAjax">
+
+              			{{ include(
+                            'MajesMediaBundle:Admin:ajax/list-results.html.twig', {'full': 1}
+                        ) }}
+
+              		</div>
+            	</div>
+          	</div>
+                
+            {% if loadmore == true %}<a href="{{ path('_media_list', {'page': page+1}) }}" class="btn btn-lg btn-success btn-block" id="loadMoreMediaButton" style="margin-top: 20px;">
+                {% trans %}Load more{% endtrans %}
+            </a>{% endif %}
+
+        </div>
+        <!-- End Gallery with filtering and actions -->
+    </div>
+
+</div>
+
+<script>
+    $(document).ready(function(){
+        var page = {{page}};
+        if($("#loadMoreMediaButton")){
+            $("#loadMoreMediaButton").click(function(e){
+                e.preventDefault();
+                var self = $(this);
+                page++;
+                $('input[name=page]').val(page);
+                $("form#formFilter").ajaxSubmit({
+                    success: function(response){
+                        var $newItems = $(response);
+                        //$("#mediaResultsAjax").prepend(response);
+                        $('#mediaResultsAjax').isotope( 'insert', $newItems );
+                    }
+                });
+            });
+        }
+
+    });
+</script>
+
+{% endblock %}

@@ -1,0 +1,21 @@
+{% for media in medias %}
+<div class="gallery-item">
+    {% set mime_type = getMimeType(media.getWebPath()) %}
+    {% if 'image' in mime_type %}<img src="{{ path('_media_load', {'id':media.getId(), 'width': '200'}) }}" />
+    {% elseif 'video' in mime_type %}<i class="icon-facetime-video"></i>
+    {% else %}<i class="icon-file"></i>
+    {% endif %}
+	<div class="actions">
+		<a href="{{ path('_media_delete', {'id': media.getId(), 'context': context}) }}" class="icon-trash" onclick="return CoreAdmin.Common.confirmDelete('{% trans %}Are you sure you want to delete this media?{% endtrans %}')"></a>
+        {% if 'image' in mime_type %}<a class="icon-zoom-in fancybox" href="{{ path('_media_load', {'id':media.getId(), 'width': '700'}) }}?url={{ asset(media.getWebPath()) }}" rel="gallery1" title="{{ media.getTitle() }}"></a>{% endif %}
+		<a class="icon-pencil" href="{{ path('_media_edit', {'id': media.getId(), 'context': context}) }}"></a>
+
+        {% if context == 'full' %}<a class="icon-ok pictureTrigger" data-id="{{media.id}}" href="/{{ media.webPath }}"></a>{% endif %}
+
+        
+		<span class="caption">{{ media.getTitle() }} - @{{ media.getAuthor() }}</span>
+	</div>
+</div>
+{% endfor %}
+
+{% if loadmore == false %}<script>if($("#loadMoreMediaButton")) $("#loadMoreMediaButton").remove()</script>{% endif %}

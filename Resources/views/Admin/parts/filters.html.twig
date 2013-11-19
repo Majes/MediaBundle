@@ -1,0 +1,47 @@
+<div class="col-lg-3">
+	<div class="widget-container fluid-height">
+		<div class="widget-content">
+			<div class="panel-group" id="accordion">
+				<div class="panel">
+				  	<div class="panel-heading">
+				    	<div class="panel-title">
+				      		<a class="accordion-toggle{% if types is null %} collapsed{% endif %}" data-parent="#accordion" data-toggle="collapse" href="#collapseType"><div class="caret pull-right"></div>Media type</a>
+				    	</div>
+				  	</div>
+				  	<div class="panel-collapse collapse{% if types is not null %} in{% endif %}" id="collapseType">
+				    	<div class="panel-body">
+				      		<label class="checkbox"><input {% if '' in types %}checked="checked"{% endif %} name="types[]" type="checkbox" value="">All</label>
+                            <label class="checkbox"><input {% if 'picture' in types %}checked="checked"{% endif %} name="types[]" type="checkbox" value="picture">Picture</label>
+				      		<label class="checkbox"><input {% if 'video' in types %}checked="checked"{% endif %} name="types[]" type="checkbox" value="video">Video</label>
+				      		<label class="checkbox"><input {% if 'document' in types %}checked="checked"{% endif %} name="types[]" type="checkbox" value="document">Document</label>
+				    	</div>
+				  	</div>
+				</div>
+				
+				<div class="panel">
+				  	<div class="panel-heading">
+				    	<div class="panel-title">
+				      		<a class="accordion-toggle{% if folders is null %} collapsed{% endif %}" data-parent="#accordion" data-toggle="collapse" href="#collapseBundle"><div class="caret pull-right"></div>Folder</a>
+				    	</div>
+				  	</div>
+				  	<div class="panel-collapse collapse{% if folders is not null %} in{% endif %}" id="collapseBundle">
+				    	<div class="panel-body">
+                            <label class="checkbox"><input {% if '' in folders %}checked="checked"{% endif %} name="folders[]" type="checkbox" value="">All</label>
+
+                            {% for folder in all_folders %}
+				      		<label class="checkbox"><input {% if folder.folder in folders %}checked="checked"{% endif %} name="folders[]" type="checkbox" value="{{folder.folder}}">{{folder.folder}}</label>
+				      		{% endfor %}
+				    	</div>
+				  	</div>
+				</div>
+                <div class="panel">
+                    <div class="panel-collapse collapse in">
+                        <div class="panel-body">
+                            <button class="btn btn-default pull-right" onclick="$('input[name=page]').val('1'); $('#formFilter').submit();"><i class="icon-search"></i>Filter</button>
+                        </div>
+                    </div>
+                </div>
+			</div>
+		</div>
+	</div>
+</div>

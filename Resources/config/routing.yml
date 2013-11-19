@@ -1,0 +1,3 @@
+_media_load:
+    pattern:  /media/load/{id}/{crop}/{width}/{height}
+    defaults: { _controller: MajesMediaBundle:Media:load, crop: 0, width: null, height: null}
