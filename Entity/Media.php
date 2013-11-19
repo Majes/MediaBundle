@@ -397,7 +397,7 @@ class Media
     {
         // the absolute directory path where uploaded
         // documents should be saved
-        $folder = __DIR__.'/../../../../web/'.$this->getUploadDir();
+        $folder = __DIR__.'/../../../../../../web/'.$this->getUploadDir();
 
         $subfolder = $this->getCreateDate()->format('Y-m-d');
 
