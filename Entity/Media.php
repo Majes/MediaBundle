@@ -351,7 +351,7 @@ class Media
     public function storeFilenameForRemove()
     {
         $this->file_temp = $this->getAbsolutePath();
-        $this->path_temp = __DIR__.'/../../../../web/'.$this->getUploadDir().'/'.$this->getCreateDate()->format('Y-m-d').'/'.$this->getId();
+        $this->path_temp = __DIR__.'/../../../../../../web/'.$this->getUploadDir().'/'.$this->getCreateDate()->format('Y-m-d').'/'.$this->getId();
     }
 
     /**
