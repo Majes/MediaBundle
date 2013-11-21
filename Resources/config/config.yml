@@ -1,0 +1,2 @@
+imports:
+    - { resource: @MajesMediaBundle/Resources/config/services.yml }
