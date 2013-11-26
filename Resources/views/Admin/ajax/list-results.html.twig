@@ -10,7 +10,7 @@
         {% if 'image' in mime_type %}<a class="icon-zoom-in fancybox" href="{{ path('_media_load', {'id':media.getId(), 'width': '700'}) }}?url={{ asset(media.getWebPath()) }}" rel="gallery1" title="{{ media.getTitle() }}"></a>{% endif %}
 		<a class="icon-pencil" href="{{ path('_media_edit', {'id': media.getId(), 'context': context}) }}"></a>
 
-        {% if context == 'full' %}<a class="icon-ok pictureTrigger" data-id="{{media.id}}" href="/{{ media.webPath }}"></a>{% endif %}
+        {% if context != 'full' %}<a class="icon-ok pictureTrigger" data-id="{{media.id}}" href="/{{ media.webPath }}"></a>{% endif %}
 
         
 		<span class="caption">{{ media.getTitle() }} - @{{ media.getAuthor() }}</span>
