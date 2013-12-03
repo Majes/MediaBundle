@@ -10,10 +10,10 @@
 				  	</div>
 				  	<div class="panel-collapse collapse{% if types is not null %} in{% endif %}" id="collapseType">
 				    	<div class="panel-body">
-				      		<label class="checkbox"><input {% if '' in types %}checked="checked"{% endif %} name="types[]" type="checkbox" value="">All</label>
-                            <label class="checkbox"><input {% if 'picture' in types %}checked="checked"{% endif %} name="types[]" type="checkbox" value="picture">Picture</label>
-				      		<label class="checkbox"><input {% if 'video' in types %}checked="checked"{% endif %} name="types[]" type="checkbox" value="video">Video</label>
-				      		<label class="checkbox"><input {% if 'document' in types %}checked="checked"{% endif %} name="types[]" type="checkbox" value="document">Document</label>
+				      		<label class="checkbox"><input {% if '' in types %}checked="checked"{% endif %} name="types[]" type="checkbox" value=""><span>All</span></label>
+                            <label class="checkbox"><input {% if 'picture' in types %}checked="checked"{% endif %} name="types[]" type="checkbox" value="picture"><span>Picture</span></label>
+				      		<label class="checkbox"><input {% if 'video' in types %}checked="checked"{% endif %} name="types[]" type="checkbox" value="video"><span>Video</span></label>
+				      		<label class="checkbox"><input {% if 'document' in types %}checked="checked"{% endif %} name="types[]" type="checkbox" value="document"><span>Document</span></label>
 				    	</div>
 				  	</div>
 				</div>
@@ -26,10 +26,10 @@
 				  	</div>
 				  	<div class="panel-collapse collapse{% if folders is not null %} in{% endif %}" id="collapseBundle">
 				    	<div class="panel-body">
-                            <label class="checkbox"><input {% if '' in folders %}checked="checked"{% endif %} name="folders[]" type="checkbox" value="">All</label>
+                            <label class="checkbox"><input {% if '' in folders %}checked="checked"{% endif %} name="folders[]" type="checkbox" value=""><span>All</span></label>
 
                             {% for folder in all_folders %}
-				      		<label class="checkbox"><input {% if folder.folder in folders %}checked="checked"{% endif %} name="folders[]" type="checkbox" value="{{folder.folder}}">{{folder.folder}}</label>
+				      		<label class="checkbox"><input {% if folder.folder in folders %}checked="checked"{% endif %} name="folders[]" type="checkbox" value="{{folder.folder}}"><span>{{folder.folder}}</span></label>
 				      		{% endfor %}
 				    	</div>
 				  	</div>
