@@ -5,15 +5,15 @@
 				<div class="panel">
 				  	<div class="panel-heading">
 				    	<div class="panel-title">
-				      		<a class="accordion-toggle{% if types is null %} collapsed{% endif %}" data-parent="#accordion" data-toggle="collapse" href="#collapseType"><div class="caret pull-right"></div>Media type</a>
+				      		<a class="accordion-toggle{% if types is null %} collapsed{% endif %}" data-parent="#accordion" data-toggle="collapse" href="#collapseType"><div class="caret pull-right"></div>{% trans %}Media type{% endtrans %}</a>
 				    	</div>
 				  	</div>
 				  	<div class="panel-collapse collapse{% if types is not null %} in{% endif %}" id="collapseType">
 				    	<div class="panel-body">
-				      		<label class="checkbox"><input {% if '' in types %}checked="checked"{% endif %} name="types[]" type="checkbox" value=""><span>All</span></label>
-                            <label class="checkbox"><input {% if 'picture' in types %}checked="checked"{% endif %} name="types[]" type="checkbox" value="picture"><span>Picture</span></label>
-				      		<label class="checkbox"><input {% if 'video' in types %}checked="checked"{% endif %} name="types[]" type="checkbox" value="video"><span>Video</span></label>
-				      		<label class="checkbox"><input {% if 'document' in types %}checked="checked"{% endif %} name="types[]" type="checkbox" value="document"><span>Document</span></label>
+				      		<label class="checkbox"><input {% if '' in types %}checked="checked"{% endif %} name="types[]" type="checkbox" value=""><span>{% trans %}All{% endtrans %}</span></label>
+                            <label class="checkbox"><input {% if 'picture' in types %}checked="checked"{% endif %} name="types[]" type="checkbox" value="picture"><span>{% trans %}Picture{% endtrans %}</span></label>
+				      		<label class="checkbox"><input {% if 'video' in types %}checked="checked"{% endif %} name="types[]" type="checkbox" value="video"><span>{% trans %}Video{% endtrans %}</span></label>
+				      		<label class="checkbox"><input {% if 'document' in types %}checked="checked"{% endif %} name="types[]" type="checkbox" value="document"><span>{% trans %}Document{% endtrans %}</span></label>
 				    	</div>
 				  	</div>
 				</div>
@@ -21,12 +21,12 @@
 				<div class="panel">
 				  	<div class="panel-heading">
 				    	<div class="panel-title">
-				      		<a class="accordion-toggle{% if folders is null %} collapsed{% endif %}" data-parent="#accordion" data-toggle="collapse" href="#collapseBundle"><div class="caret pull-right"></div>Folder</a>
+				      		<a class="accordion-toggle{% if folders is null %} collapsed{% endif %}" data-parent="#accordion" data-toggle="collapse" href="#collapseBundle"><div class="caret pull-right"></div>{% trans %}Folder{% endtrans %}</a>
 				    	</div>
 				  	</div>
 				  	<div class="panel-collapse collapse{% if folders is not null %} in{% endif %}" id="collapseBundle">
 				    	<div class="panel-body">
-                            <label class="checkbox"><input {% if '' in folders %}checked="checked"{% endif %} name="folders[]" type="checkbox" value=""><span>All</span></label>
+                            <label class="checkbox"><input {% if '' in folders %}checked="checked"{% endif %} name="folders[]" type="checkbox" value=""><span>{% trans %}All{% endtrans %}</span></label>
 
                             {% for folder in all_folders %}
 				      		<label class="checkbox"><input {% if folder.folder in folders %}checked="checked"{% endif %} name="folders[]" type="checkbox" value="{{folder.folder}}"><span>{{folder.folder}}</span></label>
@@ -37,7 +37,7 @@
                 <div class="panel">
                     <div class="panel-collapse collapse in">
                         <div class="panel-body">
-                            <button class="btn btn-default pull-right" onclick="$('input[name=page]').val('1'); $('#formFilter').submit();"><i class="icon-search"></i>Filter</button>
+                            <button class="btn btn-default pull-right" onclick="$('input[name=page]').val('1'); $('#formFilter').submit();"><i class="icon-search"></i>{% trans %}Filter{% endtrans %}</button>
                         </div>
                     </div>
                 </div>

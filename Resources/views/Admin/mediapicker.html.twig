@@ -13,8 +13,8 @@
 <div class="col-lg-9">
   	<div class="widget-container fluid-height">
     	<div class="heading">
-      		<i class="icon-th-large"></i> Media list
-      		<a href="{{ path('_media_edit', {'context': context}) }}" class="btn btn-success-outline pull-right"><i class="icon-plus"></i>Add new</a>
+      		<i class="icon-th-large"></i> {% trans %}Media list{% endtrans %}
+      		<a href="{{ path('_media_edit', {'context': context}) }}" class="btn btn-success-outline pull-right"><i class="icon-plus"></i>{% trans %}Add new{% endtrans %}</a>
     	</div>
     	<div class="widget-content padded">
       		<div class="gallery-container" id="mediaResultsAjax">
