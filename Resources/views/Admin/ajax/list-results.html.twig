@@ -5,16 +5,23 @@
     {% elseif 'video' in mime_type %}<i class="icon-facetime-video"></i>
     {% else %}<i class="icon-file"></i>
     {% endif %}
-	<div class="actions">
-		<a href="{{ path('_media_delete', {'id': media.getId(), 'context': context}) }}" class="icon-trash" onclick="return CoreAdmin.Common.confirmDelete('{% trans %}Are you sure you want to delete this media?{% endtrans %}')"></a>
-        {% if 'image' in mime_type %}<a class="icon-zoom-in fancybox" href="{{ path('_media_load', {'id':media.getId(), 'width': '700'}) }}?url={{ asset(media.getWebPath()) }}" rel="gallery1" title="{{ media.getTitle() }}"></a>{% endif %}
-		<a class="icon-pencil" href="{{ path('_media_edit', {'id': media.getId(), 'context': context}) }}"></a>
+    <div class="actions">
+
+        <a href="{{ path('_media_delete', {'id': media.getId(), 'context': context}) }}" class="icon-trash" onclick="return CoreAdmin.Common.confirmDelete('{% trans %}Are you sure you want to delete this media?{% endtrans %}')"></a>
+
+        {% if 'image' in mime_type %}
+            <a class="icon-zoom-in fancybox" href="{{ path('_media_load', {'id':media.getId(), 'width': '700'}) }}?url={{ asset(media.getWebPath()) }}" rel="gallery1" title="{{ media.getTitle() }}"></a>
+        {% else %}
+            <a class="icon-download-alt fancybox" href="{{ asset(media.getWebPath()) }}" title="{{ media.getTitle() }}" target="_blank"></a>
+        {% endif %}
+
+        <a class="icon-pencil" href="{{ path('_media_edit', {'id': media.getId(), 'context': context}) }}"></a>
 
         {% if context != 'full' %}<a class="icon-ok pictureTrigger" data-id="{{media.id}}" href="/{{ media.webPath }}"></a>{% endif %}
 
         
-		<span class="caption">{{ media.getTitle() }} - @{{ media.getAuthor() }}</span>
-	</div>
+        <span class="caption">{{ media.getTitle() }} - @{{ media.getAuthor() }}</span>
+    </div>
 </div>
 {% endfor %}
 
