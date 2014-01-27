@@ -1,9 +1,14 @@
 services:
+    majesmedia.twig.media_extension:
+        class: Majes\MediaBundle\Twig\MediaExtension
+        tags:
+            - { name: twig.extension }
+
     majesmedia.image_type_extension:
         class: Majes\MediaBundle\Form\Extension\ImageTypeExtension
         tags:
             - { name: form.type_extension, alias: file }
-            
+
     majesmedia.form.type.media:
         class: Majes\MediaBundle\Form\MediaType
         tags:

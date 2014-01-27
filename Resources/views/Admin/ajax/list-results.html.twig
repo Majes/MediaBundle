@@ -1,7 +1,7 @@
 {% for media in medias %}
 <div class="gallery-item">
     {% set mime_type = getMimeType(media.getWebPath()) %}
-    {% if 'image' in mime_type %}<img src="{{ path('_media_load', {'id':media.getId(), 'width': '200'}) }}" />
+    {% if 'image' in mime_type %}{{ teelMediaLoad(media, 200, 150, true)|raw }}
     {% elseif 'video' in mime_type %}<i class="icon-facetime-video"></i>
     {% else %}<i class="icon-file"></i>
     {% endif %}

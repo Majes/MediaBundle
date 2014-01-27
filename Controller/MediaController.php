@@ -24,6 +24,9 @@ class MediaController extends Controller implements SystemController
          */
         $request = $this->getRequest();
 
+        $width = $width <= 0 ? null : $width;
+        $height = $height <= 0 ? null : $height;
+
         $prefix = $crop ? 'crop.' : '';
 
         $em = $this->getDoctrine()->getManager();
