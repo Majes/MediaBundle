@@ -1,6 +1,7 @@
 services:
     majesmedia.twig.media_extension:
         class: Majes\MediaBundle\Twig\MediaExtension
+        arguments: ["@doctrine.orm.entity_manager"]
         tags:
             - { name: twig.extension }
 

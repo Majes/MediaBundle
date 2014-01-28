@@ -53,4 +53,26 @@ class MediaController extends Controller implements SystemController
         return new Response();
     }
 
+    public function downloadAction($id){
+
+        $em = $this->getDoctrine()->getManager();
+        $media = $em->getRepository('MajesMediaBundle:Media')
+            ->findOneById($id);
+
+        if(is_null($media))
+            throw $this->createNotFoundException('The file does not exist');
+        
+        $file = $media->getAbsolutePath(); 
+
+        $ext = pathinfo($file, PATHINFO_EXTENSION);
+
+        header("Content-Description: File Transfer"); 
+        header("Content-Type: application/octet-stream"); 
+        header("Content-Disposition: attachment; filename=\"".$media->getTitle().".".$ext."\""); 
+        
+        readfile ($file); 
+
+        return new Response();
+    }
+
 }

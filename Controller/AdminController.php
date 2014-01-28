@@ -13,10 +13,10 @@ use Majes\MediaBundle\Form\MediaType;
 
 class AdminController extends Controller implements SystemController
 {
-	/**
-	 * @Secure(roles="ROLE_MEDIA_LIST,ROLE_SUPERADMIN")
-	 *
-	 */
+    /**
+     * @Secure(roles="ROLE_MEDIA_LIST,ROLE_SUPERADMIN")
+     *
+     */
     public function listAction($context)
     {
         $_results_per_page = 20; 
@@ -96,7 +96,7 @@ class AdminController extends Controller implements SystemController
                 }
 
                 $em = $this->getDoctrine()->getManager();
-
+                
                 //$media->upload();
 
                 $em->persist($media);

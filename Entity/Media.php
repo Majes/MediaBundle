@@ -351,7 +351,10 @@ class Media
     public function storeFilenameForRemove()
     {
         $this->file_temp = $this->getAbsolutePath();
-        $this->path_temp = __DIR__.'/../../../../../../web/'.$this->getUploadDir().'/'.$this->getCreateDate()->format('Y-m-d').'/'.$this->getId();
+        if($this->getIsProtected() == 0)
+            $this->path_temp = __DIR__.'/../../../../../../web/'.$this->getUploadDir().'/'.$this->getCreateDate()->format('Y-m-d').'/'.$this->getId();
+        else
+            $this->path_temp = __DIR__.'/../../../../../../app/private/'.$this->getUploadDir().'/'.$this->getCreateDate()->format('Y-m-d').'/'.$this->getId();
     }
 
     /**
@@ -393,11 +396,31 @@ class Media
             : $this->getUploadDir().'/'.$subfolder.'/'.$this->path;
     }
 
+    public function getWebCacheFolder()
+    {
+        
+        $subfolder = $this->getCreateDate()->format('Y-m-d').'/'.$this->getId().'/cache';
+
+        return null === $this->path
+            ? null
+            : $this->getUploadDir().'/'.$subfolder.'/';
+    }
+
     protected function getUploadRootDir()
     {
         // the absolute directory path where uploaded
         // documents should be saved
-        $folder = __DIR__.'/../../../../../../web/'.$this->getUploadDir();
+        if($this->getIsProtected() == 0)
+            $folder = __DIR__.'/../../../../../../web/'.$this->getUploadDir();
+        else{
+            if(!is_dir(__DIR__.'/../../../../../../app/private'))
+                mkdir(__DIR__.'/../../../../../../app/private', 0775);
+            
+            if(!is_dir(__DIR__.'/../../../../../../app/private/media'))
+                mkdir(__DIR__.'/../../../../../../app/private/media', 0775);
+            
+            $folder = __DIR__.'/../../../../../../app/private/'.$this->getUploadDir();
+        }
 
         $subfolder = $this->getCreateDate()->format('Y-m-d');
 

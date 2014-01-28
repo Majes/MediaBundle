@@ -21,13 +21,13 @@ class ImageTypeExtension extends AbstractTypeExtension
     }
 
     /**
-     * Add the image_path option
+     * Add the media_id option
      *
      * @param OptionsResolverInterface $resolver
      */
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $resolver->setOptional(array('image_path'));
+        $resolver->setOptional(array('media_id'));
     }
 
     /**
@@ -39,19 +39,19 @@ class ImageTypeExtension extends AbstractTypeExtension
      */
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
-        if (array_key_exists('image_path', $options)) {
+        if (array_key_exists('media_id', $options)) {
             $parentData = $form->getParent()->getData();
 
             if (null !== $parentData) {
                 $accessor = PropertyAccess::createPropertyAccessor();
-                $imageUrl = $accessor->getValue($parentData, $options['image_path']);
+                $media_id = $accessor->getValue($parentData, $options['media_id']);
             } else {
-                $imageUrl = null;
+                $media_id = null;
             }
 
             // set an "image_url" variable that will be available when rendering this field
-            $view->vars['image_url'] = $imageUrl;
+            $view->vars['media_id'] = $media_id;
         }else
-            $view->vars['image_url'] = null;
+            $view->vars['media_id'] = null;
     }
 }
