@@ -36,7 +36,7 @@ class MediaType extends AbstractType
         $builder->add('folder', 'text', array(
             'required' => true));
 
-        $builder->add('file', 'file', array('required' => false, 'image_path' => 'webPath'));
+        $builder->add('file', 'file', array('required' => false, 'media_id' => 'id'));
         $builder->add('embedded', 'textarea', array('required' => false, 'label' => 'If "Embed" type selected'));
 
         
