@@ -19,7 +19,14 @@ class MediaExtension extends \Twig_Extension
             'image/png' => 'image',
             'video/flv' => 'video',
             'video/x-flv' => 'video',
-            'video/quicktime' => 'video'
+            'video/quicktime' => 'video',
+            'video/mp4' => 'video',
+            'video/x-msvideo' => 'video',
+            'video/x-ms-wmv' => 'video',
+            'video/webm' => 'video',
+            'video/ogg' => 'video',
+            'video/x-mpegurl' => 'video',
+            'video/mp2t' => 'video'
             );
     }
 
@@ -54,6 +61,7 @@ class MediaExtension extends \Twig_Extension
 
         $crop = $crop ? 1 : 0;
 
+        $mediaTag = '';
         switch ($this->_mime_types[$mime_type]) {
             case 'image':
                     //TODO: if public, check if thumb exists, else create it, then get url
@@ -87,6 +95,17 @@ class MediaExtension extends \Twig_Extension
                     else if($media->getIsProtected() == 1){
                         $mediaTag = '<img src="/media/load/'.$media->getId().'/'.$crop.'/'.$width.'/'.$height.'" />';
                     }
+                break;
+
+            case 'video':
+
+                    /*$mediaTag = '<div class="flowplayer is-splash" data-flashfit="true" style="width: '.$width.'px; height: '.$height.'px">
+    <video>
+        <source type="'.$mime_type.'" src="/'.$media->getWebPath().'">
+        <source type="video/flash" src="/'.$media->getWebPath().'">
+    </video>
+</div>';*/
+                $mediaTag = '<div class="icon-facetime-video" ></div>';
                 break;
             
             default:

@@ -2,21 +2,38 @@
 
 {% block title %}MajesCore - Media list{% endblock %}
 
+{% block coreStyles %}
+    {{ parent() }}
+    <link href="{{ asset('bundles/majesmedia/css/skin/minimalist.css') }}" media="all" rel="stylesheet" title="majescore" type="text/css" />
+{% endblock %}
+
+{% block coreScripts %}
+    {{ parent() }}
+    <script src="{{ asset('bundles/majesmedia/js/flowplayer.min.js') }}" type="text/javascript"></script>
+    <script>
+    flowplayer.conf = {
+       swf: "/bundles/majesmedia/swf/flowplayer.swf",
+       splash: true
+    };
+    </script>
+    <script src="{{ asset('bundles/majesmedia/js/majesmedia.js') }}" type="text/javascript"></script>
+{% endblock %}
+
 {% block content_header '' %}
 
 {% block content %}
-	
+    
 <div class="container-fluid main-content">
 
-	{{ include(
+    {{ include(
                 'MajesCoreBundle:common:breadcrumbs.html.twig'
             ) }}
 
     <div class="page-title">
       <h1>{{pageTitle}}</h1>
     </div>
-	 <div class="row">
-		
+     <div class="row">
+        
         <form action="{{ path('_media_list') }}" method="get" id="formFilter">
             <input type="hidden" name="page" value="{{ page }}"/>
             {{ include('MajesMediaBundle:Admin:parts/filters.html.twig') }}  
@@ -24,21 +41,21 @@
 
         <!-- Gallery with filtering and actions -->
         <div class="col-lg-9">
-          	<div class="widget-container fluid-height">
-            	<div class="heading">
-              		<i class="icon-th-large"></i> {% trans %}Media list{% endtrans %}
-              		<a href="{{ path('_media_edit') }}" class="btn btn-success-outline pull-right"><i class="icon-plus"></i>{% trans %}Add new{% endtrans %}</a>
-            	</div>
-            	<div class="widget-content padded">
-              		<div class="gallery-container" id="mediaResultsAjax">
+            <div class="widget-container fluid-height">
+                <div class="heading">
+                    <i class="icon-th-large"></i> {% trans %}Media list{% endtrans %}
+                    <a href="{{ path('_media_edit') }}" class="btn btn-success-outline pull-right"><i class="icon-plus"></i>{% trans %}Add new{% endtrans %}</a>
+                </div>
+                <div class="widget-content padded">
+                    <div class="gallery-container" id="mediaResultsAjax">
 
-              			{{ include(
+                        {{ include(
                             'MajesMediaBundle:Admin:ajax/list-results.html.twig', {'full': 1}
                         ) }}
 
-              		</div>
-            	</div>
-          	</div>
+                    </div>
+                </div>
+            </div>
                 
             {% if loadmore == true %}<a href="{{ path('_media_list', {'page': page+1}) }}" class="btn btn-lg btn-success btn-block" id="loadMoreMediaButton" style="margin-top: 20px;">
                 {% trans %}Load more{% endtrans %}
@@ -68,6 +85,7 @@
                 });
             });
         }
+
 
     });
 </script>

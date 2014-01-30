@@ -4,12 +4,14 @@
 
     {{ teelMediaLoad(media, 200, 150, true, asset('bundles/majesmedia/img/icon-document.png'))|raw }}
 
-    <div class="actions">
+    <div class="actions{% if 'video' in mime_type %} video{% endif %}">
 
         <a href="{{ path('_media_delete', {'id': media.getId(), 'context': context}) }}" class="icon-trash" onclick="return CoreAdmin.Common.confirmDelete('{% trans %}Are you sure you want to delete this media?{% endtrans %}')"></a>
 
         {% if 'image' in mime_type %}
             <a class="icon-zoom-in fancybox" href="{{ path('_media_load', {'id':media.getId(), 'width': '700'}) }}?url={{ asset(media.getWebPath()) }}" rel="gallery1" title="{{ media.getTitle() }}"></a>
+        {% elseif 'video' in mime_type %}
+            <a class="icon-play fancyboxvideo" href="#" data-mime="{{ mime_type }}" data-src="{{ asset(media.getWebPath()) }}" rel="gallery2" title="{{ media.getTitle() }}"></a>
         {% else %}
             <a class="icon-download-alt fancybox" href="{{ path('_media_download', {id: media.getId()}) }}" title="{{ media.getTitle() }}" target="_blank"></a>
         {% endif %}
