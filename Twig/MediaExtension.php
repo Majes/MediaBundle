@@ -26,7 +26,8 @@ class MediaExtension extends \Twig_Extension
             'video/webm' => 'video',
             'video/ogg' => 'video',
             'video/x-mpegurl' => 'video',
-            'video/mp2t' => 'video'
+            'video/mp2t' => 'video',
+            'embed' => 'embed'
             );
     }
 
@@ -47,13 +48,20 @@ class MediaExtension extends \Twig_Extension
         if(is_null($media))
             return 'No media found';
 
+        
+
         $width = is_null($width) ? 0 : $width;
         $height = is_null($height) ? 0 : $height;
 
         //Get file type
-        $mime_type = mime_content_type($media->getAbsolutePath());
-        if(!isset($this->_mime_types[$mime_type]))
-            $this->_mime_types[$mime_type] = 'document';
+        if($media->getType() != 'embed'){
+            $mime_type = mime_content_type($media->getAbsolutePath());
+            if(!isset($this->_mime_types[$mime_type]))
+                $this->_mime_types[$mime_type] = 'document';
+        }else{
+            $mime_type = 'embed';
+        }
+
 
         if($height == 0 || $width == 0){
             $crop = false;
@@ -99,13 +107,17 @@ class MediaExtension extends \Twig_Extension
 
             case 'video':
 
-                    /*$mediaTag = '<div class="flowplayer is-splash" data-flashfit="true" style="width: '.$width.'px; height: '.$height.'px">
+                $mediaTag = '<div class="flowplayer is-splash" data-flashfit="true" style="width: '.$width.'px; height: '.$height.'px">
     <video>
         <source type="'.$mime_type.'" src="/'.$media->getWebPath().'">
         <source type="video/flash" src="/'.$media->getWebPath().'">
     </video>
-</div>';*/
-                $mediaTag = '<div class="icon-facetime-video" ></div>';
+</div>';
+                break;
+
+            case 'embed':
+
+                $mediaTag = $media->getEmbedded();
                 break;
             
             default:
