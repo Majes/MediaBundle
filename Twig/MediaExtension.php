@@ -121,7 +121,7 @@ class MediaExtension extends \Twig_Extension
                 break;
             
             default:
-                $mediaTag = '<img src="'.$default.'" style="width:'.$width.'px; height: '.$height.'px;"/>';
+                $mediaTag = '<a href="/media/download/'.$media->getId().'" target="_blank">Download file</a>';
                 break;
         }
         
