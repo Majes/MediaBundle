@@ -4,7 +4,8 @@
 
 
     {% if 'picture' in media.getType() %}
-        {{ teelMediaLoad(media, 200, 150, true, asset('bundles/majesmedia/img/icon-document.png'))|raw }}
+        {% set options = {'class' : 'picture'} %}
+        {{ teelMediaLoad(media, 200, 150, true, asset('bundles/majesmedia/img/icon-document.png'), options)|raw }}
     {% elseif 'video' in media.getType() %}
         <div class="icon-facetime-video" ></div>
     {% elseif 'embed' in media.getType() %}

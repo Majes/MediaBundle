@@ -38,7 +38,7 @@ class MediaExtension extends \Twig_Extension
         );
     }
 
-    public function teelMediaLoad($media, $width = null, $height = null, $crop = false, $default = null){
+    public function teelMediaLoad($media, $width = null, $height = null, $crop = false, $default = null, $options = array()){
 
         if(is_int($media)){
             $media = $this->_em->getRepository('MajesMediaBundle:Media')
@@ -48,7 +48,7 @@ class MediaExtension extends \Twig_Extension
         if(is_null($media))
             return 'No media found';
 
-        
+        $css_class = isset($options['class']) ? ' class="'.$options['class'].'"' : '';
 
         $width = is_null($width) ? 0 : $width;
         $height = is_null($height) ? 0 : $height;
@@ -96,12 +96,12 @@ class MediaExtension extends \Twig_Extension
 
                         $src = '/'.$media->getWebCacheFolder().$prefix.$width.'x'.$height.'_'.$media->getPath();
 
-                        $mediaTag = '<img src="'.$src.'" />';
+                        $mediaTag = '<img src="'.$src.'" width="'.$width.'" height="'.$height.'" title="'.$media->getTitle().'" alt="'.$media->getTitle().'"'.$css_class.'/>';
                     }
             
                     //TODO: if private use media/load url to generate img
                     else if($media->getIsProtected() == 1){
-                        $mediaTag = '<img src="/media/load/'.$media->getId().'/'.$crop.'/'.$width.'/'.$height.'" />';
+                        $mediaTag = '<img src="/media/load/'.$media->getId().'/'.$crop.'/'.$width.'/'.$height.'" width="'.$width.'" height="'.$height.'" title="'.$media->getTitle().'" alt="'.$media->getTitle().'"'.$css_class.'/>';
                     }
                 break;
 
@@ -116,12 +116,11 @@ class MediaExtension extends \Twig_Extension
                 break;
 
             case 'embed':
-
                 $mediaTag = $media->getEmbedded();
                 break;
             
             default:
-                $mediaTag = '<a href="/media/download/'.$media->getId().'" target="_blank">Download file</a>';
+                $mediaTag = '<a href="/media/download/'.$media->getId().'" target="_blank" title="'.$media->getTitle().'"'.$css_class.'>Download file</a>';
                 break;
         }
         
