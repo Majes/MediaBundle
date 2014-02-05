@@ -4,72 +4,77 @@
 
 
 <div class="row">
-<form action="{{ path('_media_picker', {'context': context}) }}" method="get" id="formFilter">
-<input type="hidden" name="page" value="{{ page }}"/>
+    <form action="{{ path('_media_picker', {'context': context}) }}" method="get" id="formFilter">
+        <input type="hidden" name="page" value="{{ page }}"/>
 
 {{ include('MajesMediaBundle:Admin:parts/filters.html.twig') }}  
 
-<!-- Gallery with filtering and actions -->
-<div class="col-lg-9">
-  	<div class="widget-container fluid-height">
-    	<div class="heading">
-      		<i class="icon-th-large"></i> {% trans %}Media list{% endtrans %}
-      		<a href="{{ path('_media_edit', {'context': context}) }}" class="btn btn-success-outline pull-right"><i class="icon-plus"></i>{% trans %}Add new{% endtrans %}</a>
-    	</div>
-    	<div class="widget-content padded">
-      		<div class="gallery-container" id="mediaResultsAjax">
+        <!-- Gallery with filtering and actions -->
+        <div class="col-lg-9">
+            <div class="widget-container fluid-height">
+                <div class="heading">
+                    <i class="icon-th-large"></i> {% trans %}Media list{% endtrans %}
+                    <a href="{{ path('_media_edit', {'context': context}) }}" class="btn btn-success-outline pull-right"><i class="icon-plus"></i>{% trans %}Add new{% endtrans %}</a>
+                </div>
+                <div class="widget-content padded">
+                    <div class="gallery-container" id="mediaResultsAjax">
 
       			{{ include(
                     'MajesMediaBundle:Admin:ajax/list-results.html.twig', {'full': 0}
                 ) }}
 
-      		</div>
-    	</div>
-  	</div>
-        
+                    </div>
+                </div>
+            </div>
+
     {% if loadmore == true %}<a href="{{ path('_media_list', {'page': page+1}) }}" class="btn btn-lg btn-success btn-block" id="loadMoreMediaButton" style="margin-top: 20px;">
         {% trans %}Load more{% endtrans %}
-    </a>{% endif %}
+            </a>{% endif %}
 
+        </div>
+    </form>
 </div>
-</form>
-</div>
 
 
-<script>
-	
-	$(document).ready(function(){
+<script type="text/javascript">
+
+    $(document).ready(function() {
         var page = {{page}};
-        if($("#loadMoreMediaButton")){
-            $("#loadMoreMediaButton").click(function(e){
+        if ($("#loadMoreMediaButton")) {
+            $("#loadMoreMediaButton").click(function(e) {
                 e.preventDefault();
                 var self = $(this);
                 page++;
                 $('input[name=page]').val(page);
                 $("form#formFilter").ajaxSubmit({
-                    success: function(response){
+                    success: function(response) {
                         var $newItems = $(response);
                         //$("#mediaResultsAjax").prepend(response);
-                        $('#mediaResultsAjax').isotope( 'insert', $newItems );
+                        $('#mediaResultsAjax').isotope('insert', $newItems);
+                        bindClick();
                     }
                 });
             });
         };
 
-        $("a.pictureTrigger").click(function(e){
-        	e.preventDefault();
+        var bindClick = function() {
+            $("a.pictureTrigger").off('click').on('click', function(e) {
+
+                e.preventDefault();
             {% if context == 'tinymce' %}
-			parent.tinymce.activeEditor.windowManager.getParams().setUrl($(this).attr('href'));
-			parent.tinymce.activeEditor.windowManager.close();
+                parent.tinymce.activeEditor.windowManager.getParams().setUrl($(this).attr('href'));
+                parent.tinymce.activeEditor.windowManager.close();
             {% else %}
-            $('#preview{{ref}}', window.parent.document).attr('src', $(this).attr('href'));
-            $('#{{ref}}_id', window.parent.document).val($(this).data('id'));
+                $('#preview{{ref}}', window.parent.document).attr('src', $(this).attr('href'));
+                $('#{{ref}}_id', window.parent.document).val($(this).data('id'));
             {% endif %}
-		});
+            });
+        }
+        bindClick();
 
     });
-	
-	
+
+
 
 </script>
 
