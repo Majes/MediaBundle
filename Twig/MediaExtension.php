@@ -124,8 +124,8 @@ class MediaExtension extends \Twig_Extension
                 break;
 
             case '':
-                $mediaTag = 'No media found',
-                break
+                $mediaTag = 'No media found';
+                break;
             
             default:
                 $mediaTag = '<a href="/media/download/'.$media->getId().'" target="_blank" title="'.$media->getTitle().'"'.$css_class.'>Download file</a>';
