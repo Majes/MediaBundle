@@ -49,6 +49,13 @@ class MediaExtension extends \Twig_Extension
             return 'No media found';
 
         $css_class = isset($options['class']) ? ' class="'.$options['class'].'"' : '';
+        $attribute_id = isset($options['id']) ? ' id="'.$options['class'].'"' : '';
+        $attribute_data = '';
+        
+        if (isset($options['data'])){
+            foreach ($options['data'] as $data_name => $data_value)
+                $attribute_data .= 'data-'.$data_name.'='.$data_value;
+        }
 
         $width = is_null($width) ? 0 : $width;
         $height = is_null($height) ? 0 : $height;
@@ -96,12 +103,12 @@ class MediaExtension extends \Twig_Extension
 
                         $src = '/'.$media->getWebCacheFolder().$prefix.$width.'x'.$height.'_'.$media->getPath();
 
-                        $mediaTag = '<img src="'.$src.'" width="'.$width.'" height="'.$height.'" title="'.$media->getTitle().'" alt="'.$media->getTitle().'"'.$css_class.'/>';
+                        $mediaTag = '<img src="'.$src.'" width="'.$width.'" height="'.$height.'" title="'.$media->getTitle().'" alt="'.$media->getTitle().'"'.$css_class.$attribute_id.$attribute_data.'/>';
                     }
             
                     //TODO: if private use media/load url to generate img
                     else if($media->getIsProtected() == 1){
-                        $mediaTag = '<img src="/media/load/'.$media->getId().'/'.$crop.'/'.$width.'/'.$height.'" width="'.$width.'" height="'.$height.'" title="'.$media->getTitle().'" alt="'.$media->getTitle().'"'.$css_class.'/>';
+                        $mediaTag = '<img src="/media/load/'.$media->getId().'/'.$crop.'/'.$width.'/'.$height.'" width="'.$width.'" height="'.$height.'" title="'.$media->getTitle().'" alt="'.$media->getTitle().'"'.$css_class.$attribute_id.$attribute_data.'/>';
                     }
                 break;
 
@@ -120,7 +127,7 @@ class MediaExtension extends \Twig_Extension
                 break;
             
             default:
-                $mediaTag = '<a href="/media/download/'.$media->getId().'" target="_blank" title="'.$media->getTitle().'"'.$css_class.'>Download file</a>';
+                $mediaTag = '<a href="/media/download/'.$media->getId().'" target="_blank" title="'.$media->getTitle().'"'.$css_class.$attribute_id.$attribute_data.'>Download file</a>';
                 break;
         }
         
