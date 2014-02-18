@@ -62,7 +62,11 @@ class MediaExtension extends \Twig_Extension
 
         //Get file type
         if($media->getType() != 'embed'){
+            if(!file_exists($media->getAbsolutePath()))
+                return 'No media found';
+
             $mime_type = mime_content_type($media->getAbsolutePath());
+
             if(!isset($this->_mime_types[$mime_type]))
                 $this->_mime_types[$mime_type] = 'document';
         }else{
@@ -124,6 +128,10 @@ class MediaExtension extends \Twig_Extension
 
             case 'embed':
                 $mediaTag = $media->getEmbedded();
+                break;
+
+            case '':
+                $mediaTag = 'No media found';
                 break;
             
             default:

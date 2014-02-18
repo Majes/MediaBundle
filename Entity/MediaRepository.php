@@ -14,7 +14,8 @@ class MediaRepository extends EntityRepository
     	$q = $this
             ->createQueryBuilder('m')
             ->setFirstResult( $offset )
-       		->setMaxResults( $limit );
+       		->setMaxResults( $limit )
+          ->orderBy('m.createDate', 'DESC');
 
        	if(!is_null($types)){
 
