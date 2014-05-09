@@ -157,6 +157,8 @@ class Image
 					break;
 
 				case self::$TYPE_PNG:
+					imagealphablending($this->image, false);
+					imagesavealpha($this->image,true);
 					imagepng($this->image,$this->destination.$imageName);
 					return true;
 					break;
@@ -244,12 +246,13 @@ class Image
 		// now we know the new image's dimensions
 
 		$new = imagecreatetruecolor($newX, $newY);
-		imagealphablending($new, false);
-		imagesavealpha($new, true);
+		
 		
 		if($this->type == self::$TYPE_GIF || $this->type == self::$TYPE_PNG)
 		{
-			$transparent = imagecolorallocatealpha($new, 0, 0, 0, 127);
+			imagealphablending($new, false);
+			imagesavealpha($new, true);
+			$transparent = imagecolorallocatealpha($new, 255, 255, 255, 127);
 			imagefilledrectangle($new, 0, 0, $newX, $newY, $transparent);
 		}
 		imagecopyresampled($new, $this->image, 0, 0, 0, 0, $newX, $newY, $origX, $origY);
