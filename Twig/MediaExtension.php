@@ -46,7 +46,7 @@ class MediaExtension extends \Twig_Extension
         }
 
         if(is_null($media))
-            return 'No media found';
+            return '';
 
         $css_class = isset($options['class']) ? ' class="'.$options['class'].'"' : '';
         $attribute_id = isset($options['id']) ? ' id="'.$options['class'].'"' : '';
@@ -63,7 +63,7 @@ class MediaExtension extends \Twig_Extension
         //Get file type
         if($media->getType() != 'embed'){
             if(!file_exists($media->getAbsolutePath()))
-                return 'No media found';
+                return '';
 
             $mime_type = mime_content_type($media->getAbsolutePath());
 
@@ -131,7 +131,7 @@ class MediaExtension extends \Twig_Extension
                 break;
 
             case '':
-                $mediaTag = 'No media found';
+                $mediaTag = '';
                 break;
             
             default:
