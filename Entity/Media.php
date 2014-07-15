@@ -21,7 +21,7 @@ class Media
     private $path_temp;
 
     /**
-     * @ORM\Column(name="id", type="integer")
+     * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id()
      * @ORM\GeneratedValue(strategy="AUTO")
      */
@@ -29,57 +29,55 @@ class Media
 
     /**
      * @ORM\ManyToOne(targetEntity="Majes\CoreBundle\Entity\User\User")
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=false)
      */
     private $user;
 
     /**
-     * @ORM\Column(name="type", type="string", length=100)
+     * @ORM\Column(name="type", type="string", length=100, nullable=false)
      */
-    private $type;
+    private $type='picture';
 
     /**
-     * @ORM\Column(name="folder", type="string", length=100)
+     * @ORM\Column(name="folder", type="string", length=100, nullable=false)
      */
-    private $folder;
+    private $folder='default';
 
     /**
-     * @ORM\Column(name="title", type="string", length=255)
+     * @ORM\Column(name="title", type="string", length=255, nullable=true)
      */
-    private $title;
+    private $title=null;
 
     /**
-     * @ORM\Column(name="author", type="string", length=255)
+     * @ORM\Column(name="author", type="string", length=255, nullable=true)
      */
-    private $author;
+    private $author=null;
 
     /**
-     * @ORM\Column(name="path", type="string", length=255)
+     * @ORM\Column(name="path", type="string", length=255, nullable=true)
      */
-    private $path;
+    private $path=null;
 
     private $file;
 
     /**
-     * @ORM\Column(name="embedded", type="text")
+     * @ORM\Column(name="embedded", type="text", nullable=true)
      */
     private $embedded;
 
     /**
-     * @ORM\Column(name="is_protected", type="boolean")
+     * @ORM\Column(name="is_protected", type="boolean", nullable=false)
      */
-    private $isProtected;
+    private $isProtected=0;
 
 
     /**
-     * @Gedmo\Timestampable(on="create")
-     * @ORM\Column(name="create_date", type="datetime")
+     * @ORM\Column(name="create_date", type="datetime", nullable=false)
      */
     private $createDate;
 
     /**
-     * @Gedmo\Timestampable(on="update")
-     * @ORM\Column(name="update_date", type="datetime")
+     * @ORM\Column(name="update_date", type="datetime", nullable=false)
      */
     private $updateDate;
 
@@ -456,7 +454,19 @@ class Media
         }
         rmdir($dir);
     }
+    /**
+     *
+     * @ORM\PrePersist
+     * @ORM\PreUpdate
+     */
+    public function updatedTimestamps()
+    {
+        $this->setUpdateDate(new \DateTime(date('Y-m-d H:i:s')));
 
-
+        if($this->getCreateDate() == null)
+        {
+            $this->setCreateDate(new \DateTime(date('Y-m-d H:i:s')));
+        }
+    }
 
 }
