@@ -337,6 +337,8 @@ class Media
         if (isset($this->file_temp)) {
             // delete the old image
             unlink($this->getUploadRootDir().'/'.$this->file_temp);
+            unlink($this->getUploadRootDir().'/cache/crop.34x34_'.$this->file_temp);
+            unlink($this->getUploadRootDir().'/cache/crop.200x150_'.$this->file_temp);
             // clear the temp image path
             $this->file_temp = null;
         }
@@ -423,7 +425,7 @@ class Media
         $subfolder = $this->getCreateDate()->format('Y-m-d');
 
         if(!is_dir($folder))
-            mkdir($folder, 0755);
+            mkdir($folder, 0755, true);
 
         $folder = $folder.'/'.$subfolder;
         if(!is_dir($folder))
