@@ -39,7 +39,6 @@ class MediaExtension extends \Twig_Extension
     }
 
     public function teelMediaLoad($media, $width = null, $height = null, $crop = false, $default = null, $options = array()){
-
         if(is_int($media)){
             $media = $this->_em->getRepository('MajesMediaBundle:Media')
                 ->findOneById($media);
@@ -93,7 +92,12 @@ class MediaExtension extends \Twig_Extension
                                 
                         $file = $media->getAbsolutePath();
                         $destination = $media->getCachePath();
-                
+
+                        $exif = @exif_read_data($file);
+                        if(isset($exif['Orientation'])){
+                            $ort = $exif['Orientation'];
+                        }
+
                         $lib_image = new Image();
                         if(!is_file($destination.$prefix.$width.'x'.$height.'_'.$media->getPath())){
                             $lib_image->init($file, $destination);
@@ -102,6 +106,39 @@ class MediaExtension extends \Twig_Extension
                                 $lib_image->crop($width, $height);
                             else
                                 $lib_image->resize($width, $height);
+                            if(isset($ort))
+                                switch ($ort) {
+                                  case 2:
+                                    $lib_image->mirror();
+                                    break;
+
+                                  case 3:
+                                    $lib_image->rotate(180);
+                                    break;
+
+                                  case 4:
+                                    $lib_image->rotate(180)->mirror();
+                                    break;
+
+                                  case 5:
+                                    $lib_image->rotate(-90)->mirror();
+                                    break;
+
+                                  case 6:
+                                    $lib_image->rotate(-90);
+                                    break;
+
+                                  case 7:
+                                    $lib_image->rotate(90)->mirror();
+                                    break;
+
+                                  case 8:
+                                    $lib_image->rotate(90);
+                                    break;
+
+                                  default: $lib_image->copy();
+                                }
+
                             $lib_image->saveImage($prefix.$width.'x'.$height.'_'.$media->getPath());
                         }
 
@@ -141,8 +178,13 @@ class MediaExtension extends \Twig_Extension
         
         
         //TODO: if media is not picture, then do what should be done to display it (video, embed, document to download)
+        if (isset($options['src'])){
+            if($options['src'])
+                return '/'.$media->getWebCacheFolder().$prefix.$width.'x'.$height.'_'.$media->getPath();
+        }else{
+            return $mediaTag;
+        }
         
-        return $mediaTag;
     }
 
 

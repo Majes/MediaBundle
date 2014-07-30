@@ -496,6 +496,22 @@ class Image
 			echo "<img src='".$path.$path_info['filename']."_".$width."x".$height.".".strtolower($path_info['extension'])."' width='".$widthReal."' height='".$heightReal."' ".$style."/>";
 	    
 	}
-        
+    public function rotate($angle){
+
+    	$new = imagerotate($this->image, $angle, null);
+    	
+    	$this->image = $new;
+
+		return true;
+    }
+
+    public function mirror(){
+    						
+    	$new = imageflip($this->filename, "IMG_FLIP_BOTH");
+    	
+    	$this->image = $new;
+
+		return true;
+    }   
     
 }

@@ -14,3 +14,7 @@ services:
         class: Majes\MediaBundle\Form\MediaType
         tags:
             - { name: form.type, alias: media }
+            
+    majesmedia.mediaService:
+        class: Majes\MediaBundle\Services\MediaService
+        arguments: [@doctrine.orm.entity_manager]
