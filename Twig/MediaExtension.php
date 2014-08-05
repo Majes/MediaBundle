@@ -136,7 +136,7 @@ class MediaExtension extends \Twig_Extension
                                     $lib_image->rotate(90);
                                     break;
 
-                                  default: $lib_image->copy();
+                                  default: ;
                                 }
 
                             $lib_image->saveImage($prefix.$width.'x'.$height.'_'.$media->getPath());
