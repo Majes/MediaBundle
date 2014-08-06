@@ -48,7 +48,7 @@ class MediaExtension extends \Twig_Extension
             return '';
 
         $css_class = isset($options['class']) ? ' class="'.$options['class'].'"' : '';
-        $attribute_id = isset($options['id']) ? ' id="'.$options['class'].'"' : '';
+        $attribute_id = isset($options['id']) ? ' id="'.$options['id'].'"' : '';
         $attribute_data = '';
         
         if (isset($options['data'])){

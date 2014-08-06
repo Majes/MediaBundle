@@ -96,8 +96,6 @@ class AdminController extends Controller implements SystemController
                 }
 
                 $em = $this->getDoctrine()->getManager();
-                
-                //$media->upload();
 
                 $em->persist($media);
                 $em->flush();

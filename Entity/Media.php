@@ -19,6 +19,7 @@ class Media
 
     private $file_temp;
     private $path_temp;
+    private $folder_temp;
 
     /**
      * @ORM\Column(name="id", type="integer", nullable=false)
@@ -318,19 +319,30 @@ class Media
     }
 
     /**
+    * @ORM\PostLoad
+    */
+    public function settingTemp(){
+        $this->file_temp = $this->file;
+        $this->path_temp = $this->path;
+        $this->folder_temp = $this->folder;
+    }
+
+    /**
      * @ORM\PostPersist()
      * @ORM\PostUpdate()
      */
     public function upload()
     {
+
         // the file property can be empty if the field is not required
         if (null === $this->getFile()) {
+            rename(str_replace($this->folder,$this->folder_temp,$this->getUploadRootDir()),$this->getUploadRootDir());
             return;
         }
     
         // if there is an error when moving the file, an exception will
         // be automatically thrown by move(). This will properly prevent
-        // the entity from being persisted to the database on error
+        // the entity from being persisted to the database on error        
         $this->getFile()->move($this->getUploadRootDir(), $this->path);
 
         // check if we have an old image
