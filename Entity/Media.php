@@ -349,8 +349,11 @@ class Media
         if (isset($this->file_temp)) {
             // delete the old image
             unlink($this->getUploadRootDir().'/'.$this->file_temp);
-            unlink($this->getUploadRootDir().'/cache/crop.34x34_'.$this->file_temp);
-            unlink($this->getUploadRootDir().'/cache/crop.200x150_'.$this->file_temp);
+            $crop_temps = glob($this->getUploadRootDir().'/cache/*'); // get all file names
+            foreach($crop_temps as $crop_temp){
+              if(is_file($crop_temp))
+                unlink($crop_temp);
+            }
             // clear the temp image path
             $this->file_temp = null;
         }
