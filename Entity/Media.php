@@ -346,7 +346,7 @@ class Media
         $this->getFile()->move($this->getUploadRootDir(), $this->path);
 
         // check if we have an old image
-        if (isset($this->file_temp)) {
+        if (isset($this->file_temp) && is_file($this->file_temp)) {
             // delete the old image
             unlink($this->getUploadRootDir().'/'.$this->file_temp);
             $crop_temps = glob($this->getUploadRootDir().'/cache/*'); // get all file names
