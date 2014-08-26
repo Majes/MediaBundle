@@ -39,13 +39,21 @@ class MediaExtension extends \Twig_Extension
     }
 
     public function teelMediaLoad($media, $width = null, $height = null, $crop = false, $default = null, $options = array()){
-        if(is_int($media)){
-            $media = $this->_em->getRepository('MajesMediaBundle:Media')
-                ->findOneById($media);
+        if (is_int($media)) {
+            $media = $this->_em->getRepository('MajesMediaBundle:Media')->findOneById($media);
         }
 
-        if(is_null($media))
-            return '';
+        if (is_null($media)) {
+            if (is_object($default) && $default instanceof Media)
+                $media = $default;
+            else if (is_int($default))
+                $media = $this->_em->getRepository('MajesMediaBundle:Media')->findOneById($default);
+            else if (!is_null($default))
+                return '<img src="'.$default.'" width="'.$width.'" height="'.$height.'"/>';
+            else
+                return "Media not found";
+
+        }
 
         $css_class = isset($options['class']) ? ' class="'.$options['class'].'"' : '';
         $attribute_id = isset($options['id']) ? ' id="'.$options['id'].'"' : '';
