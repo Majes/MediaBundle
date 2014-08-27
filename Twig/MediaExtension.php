@@ -101,58 +101,21 @@ class MediaExtension extends \Twig_Extension
                         $file = $media->getAbsolutePath();
                         $destination = $media->getCachePath();
 
-                        $exif = @exif_read_data($file);
-                        if(isset($exif['Orientation'])){
-                            $ort = $exif['Orientation'];
-                        }
-
                         $lib_image = new Image();
                         if(!is_file($destination.$prefix.$width.'x'.$height.'_'.$media->getPath())){
                             $lib_image->init($file, $destination);
-                
+                            
                             if($crop)
                                 $lib_image->crop($width, $height);
                             else
                                 $lib_image->resize($width, $height);
-                            if(isset($ort))
-                                switch ($ort) {
-                                  case 2:
-                                    $lib_image->mirror();
-                                    break;
-
-                                  case 3:
-                                    $lib_image->rotate(180);
-                                    break;
-
-                                  case 4:
-                                    $lib_image->rotate(180)->mirror();
-                                    break;
-
-                                  case 5:
-                                    $lib_image->rotate(-90)->mirror();
-                                    break;
-
-                                  case 6:
-                                    $lib_image->rotate(-90);
-                                    break;
-
-                                  case 7:
-                                    $lib_image->rotate(90)->mirror();
-                                    break;
-
-                                  case 8:
-                                    $lib_image->rotate(90);
-                                    break;
-
-                                  default: ;
-                                }
 
                             $lib_image->saveImage($prefix.$width.'x'.$height.'_'.$media->getPath());
                         }
 
                         $src = '/'.$media->getWebCacheFolder().$prefix.$width.'x'.$height.'_'.$media->getPath();
 
-                        $mediaTag = '<img src="'.$src.'" width="'.$width.'" height="'.$height.'" title="'.$media->getTitle().'" alt="'.$media->getTitle().'"'.$css_class.$attribute_id.$attribute_data.'/>';
+                        $mediaTag = '<img src="'.$src.'" title="'.$media->getTitle().'" alt="'.$media->getTitle().'"'.$css_class.$attribute_id.$attribute_data.'/>';
                     }
             
                     //TODO: if private use media/load url to generate img
