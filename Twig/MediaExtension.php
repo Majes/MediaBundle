@@ -56,7 +56,6 @@ class MediaExtension extends \Twig_Extension
         }
 
         $css_class = isset($options['class']) ? ' class="'.$options['class'].'"' : '';
-        $attribute_align = isset($options['align']) ? ' align="'.$options['align'].'"' : '';
         $attribute_id = isset($options['id']) ? ' id="'.$options['id'].'"' : '';
         $attribute_data = '';
         
@@ -116,12 +115,12 @@ class MediaExtension extends \Twig_Extension
 
                         $src = '/'.$media->getWebCacheFolder().$prefix.$width.'x'.$height.'_'.$media->getPath();
 
-                        $mediaTag = '<img src="'.$src.'" title="'.$media->getTitle().'" alt="'.$media->getTitle().'"'.$css_class.$attribute_id.$attribute_align.$attribute_data.'/>';
+                        $mediaTag = '<img src="'.$src.'" title="'.$media->getTitle().'" alt="'.$media->getTitle().'"'.$css_class.$attribute_id.$attribute_data.'/>';
                     }
             
                     //TODO: if private use media/load url to generate img
                     else if($media->getIsProtected() == 1){
-                        $mediaTag = '<img src="/media/load/'.$media->getId().'/'.$crop.'/'.$width.'/'.$height.'" width="'.$width.'" height="'.$height.'" title="'.$media->getTitle().'" alt="'.$media->getTitle().'"'.$css_class.$attribute_id.$attribute_align.$attribute_data.'/>';
+                        $mediaTag = '<img src="/media/load/'.$media->getId().'/'.$crop.'/'.$width.'/'.$height.'" width="'.$width.'" height="'.$height.'" title="'.$media->getTitle().'" alt="'.$media->getTitle().'"'.$css_class.$attribute_id.$attribute_data.'/>';
                     }
                 break;
 
