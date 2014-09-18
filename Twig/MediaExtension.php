@@ -88,6 +88,8 @@ class MediaExtension extends \Twig_Extension
         $crop = $crop ? 1 : 0;
 
         $mediaTag = '';
+        
+
         switch ($this->_mime_types[$mime_type]) {
             case 'image':
                     //TODO: if public, check if thumb exists, else create it, then get url
@@ -113,37 +115,45 @@ class MediaExtension extends \Twig_Extension
                             $lib_image->saveImage($prefix.$width.'x'.$height.'_'.$media->getPath());
                         }
 
-                        $src = '/'.$media->getWebCacheFolder().$prefix.$width.'x'.$height.'_'.$media->getPath();
+                        $mediaSrc = '/'.$media->getWebCacheFolder().$prefix.$width.'x'.$height.'_'.$media->getPath();
 
-                        $mediaTag = '<img src="'.$src.'" title="'.$media->getTitle().'" alt="'.$media->getTitle().'"'.$css_class.$attribute_id.$attribute_data.'/>';
+                        $mediaTag = '<img src="'.$mediaSrc.'" title="'.$media->getTitle().'" alt="'.$media->getTitle().'"'.$css_class.$attribute_id.$attribute_data.'/>';
                     }
             
                     //TODO: if private use media/load url to generate img
                     else if($media->getIsProtected() == 1){
-                        $mediaTag = '<img src="/media/load/'.$media->getId().'/'.$crop.'/'.$width.'/'.$height.'" width="'.$width.'" height="'.$height.'" title="'.$media->getTitle().'" alt="'.$media->getTitle().'"'.$css_class.$attribute_id.$attribute_data.'/>';
+                        $mediaTag = '<img src="/media/load/'.$media->getId().'/'.$crop.'/'.$width.'/'.$height.'" width="'.$width.'" height="'.$height.'" title="'.$media->getTitle().'" alt="'.$media->getTitle().'"'.$css_class.$attribute_id.$attribute_data.' onerror=\'this.src="/bundles/majesmedia/img/icon-document.png"\'/>';
                     }
                 break;
 
             case 'video':
 
                 $mediaTag = '<div class="flowplayer is-splash" data-flashfit="true" style="width: '.$width.'px; height: '.$height.'px">
-    <video>
-        <source type="'.$mime_type.'" src="/'.$media->getWebPath().'">
-        <source type="video/flash" src="/'.$media->getWebPath().'">
-    </video>
-</div>';
+                                <video>
+                                    <source type="'.$mime_type.'" src="/'.$media->getWebPath().'">
+                                    <source type="video/flash" src="/'.$media->getWebPath().'">
+                                </video>
+                            </div>';
                 break;
 
             case 'embed':
                 $mediaTag = $media->getEmbedded();
+                $mediaSrc = '';
+                break;
+
+            case 'document':
+                $mediaTag = '<a href="/media/download/'.$media->getId().'" target="_blank" title="'.$media->getTitle().'"'.$css_class.$attribute_id.$attribute_data.'>Download file</a>';
+                $mediaSrc = '/'.$media->getWebPath();
                 break;
 
             case '':
                 $mediaTag = '';
+                $mediaSrc = '';
                 break;
             
             default:
                 $mediaTag = '<a href="/media/download/'.$media->getId().'" target="_blank" title="'.$media->getTitle().'"'.$css_class.$attribute_id.$attribute_data.'>Download file</a>';
+                $mediaSrc = '';
                 break;
         }
         
@@ -151,7 +161,7 @@ class MediaExtension extends \Twig_Extension
         //TODO: if media is not picture, then do what should be done to display it (video, embed, document to download)
         if (isset($options['src'])){
             if($options['src'])
-                return '/'.$media->getWebCacheFolder().$prefix.$width.'x'.$height.'_'.$media->getPath();
+                return $mediaSrc;
         }else{
             return $mediaTag;
         }
