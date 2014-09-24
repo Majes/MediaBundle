@@ -104,13 +104,17 @@ class MediaExtension extends \Twig_Extension
                         $destination = $media->getCachePath();
 
                         $lib_image = new Image();
-                        if(!is_file($destination.$prefix.$width.'x'.$height.'_'.$media->getPath())){
+                        if(is_null($width) && is_null($height))
+                            $futureFile = '';
+                        else
+                            $futureFile = $prefix.$width.'x'.$height.'_';
+
+                        if(!is_file($destination.$futureFile.$media->getPath())){
                             $lib_image->init($file, $destination);
                             
                             if($crop)
                                 $lib_image->crop($width, $height);
-                            else
-                                if(!is_null($width) && !is_null($height))
+                            elseif(!is_null($width) && !is_null($height))
                                 $lib_image->resize($width, $height);
 
                             if(is_null($width) && is_null($height)) 
