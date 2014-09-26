@@ -117,15 +117,10 @@ class MediaExtension extends \Twig_Extension
                             elseif(!is_null($width) && !is_null($height))
                                 $lib_image->resize($width, $height);
 
-                            if(is_null($width) && is_null($height)) 
-                                $lib_image->saveImage($media->getPath());
-                            else
-                                $lib_image->saveImage($prefix.$width.'x'.$height.'_'.$media->getPath());
+                            $lib_image->saveImage($futureFile.$media->getPath());
                         }
-                        if(is_null($width) && is_null($height))
-                            $mediaSrc = '/'.$media->getWebCacheFolder().$media->getPath();
-                        else
-                            $mediaSrc = '/'.$media->getWebCacheFolder().$prefix.$width.'x'.$height.'_'.$media->getPath();
+                       
+                        $mediaSrc = '/'.$media->getWebCacheFolder().$futureFile.$media->getPath();
 
                         $mediaTag = '<img src="'.$mediaSrc.'" title="'.$media->getTitle().'" alt="'.$media->getTitle().'"'.$css_class.$attribute_id.$attribute_data.'/>';
                     }

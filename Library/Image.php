@@ -33,7 +33,10 @@ class Image
 	public function init($filename, $destination = false, $quality = 80){
 		$this->quality = $quality;
 		$this->filename = $filename;
-		$this->imagick->readImage($this->filename); 
+		$this->imagick->readImage($this->filename);
+		$format = $this->imagick->getImageFormat(); 
+		if ($format == 'GIF')
+			$this->imagick = $this->imagick->coalesceImages();
 		if(!$destination)
 			$this->destination = 'pictures';
 		else
@@ -67,9 +70,12 @@ class Image
 	}
 
 	public function saveImage ($imageName) {
-		//echo $this->image.' '.$this->destination.$imageName.'.'.$this->type;
+		$format = $this->imagick->getImageFormat();
 		if(!file_exists($this->destination.$imageName)){
-			$this->imagick->writeImage($this->destination.$imageName);
+			if ($format == 'GIF')
+				$this->imagick->writeImages($this->destination.$imageName, true);
+			else
+				$this->imagick->writeImage($this->destination.$imageName);
 			return true;
 		}
 		return false;
@@ -77,18 +83,29 @@ class Image
 
 	public function resize ($width = NULL, $height = NULL, $fit = false) {
 		$fit = (bool) $fit;
+		$format = $this->imagick->getImageFormat();
 		// if no bounding box supplied, then return the original image
 		if ($width == NULL && $height == NULL){
 			return $this->imagick;
 		}else{
-			$this->imagick->adaptiveResizeImage($width, $height, true);
+			if ($format == 'GIF')
+				foreach ($this->imagick as $frame) 
+					$frame->adaptiveResizeImage($width, $height, true); 
+			else
+				$this->imagick->adaptiveResizeImage($width, $height, true);
 			return true;
 		}
+		
+		
 	}
 	
 	public function crop($width, $height)
 	{
-		$this->imagick->cropImage($width, $height, ($this->imagick->getImageWidth()-$width)/2,($this->imagick->getImageHeight()-$height)/2);
+		if ($format == 'GIF')
+			foreach ($this->imagick as $frame)
+				$frame->cropImage($width, $height, ($this->imagick->getImageWidth()-$width)/2,($this->imagick->getImageHeight()-$height)/2); 	   
+		else
+			$this->imagick->cropImage($width, $height, ($this->imagick->getImageWidth()-$width)/2,($this->imagick->getImageHeight()-$height)/2);
 		return true;
 	}
 
