@@ -101,6 +101,7 @@ class Image
 	
 	public function crop($width, $height)
 	{
+		$format = $this->imagick->getImageFormat();
 		if ($format == 'GIF')
 			foreach ($this->imagick as $frame)
 				$frame->cropImage($width, $height, ($this->imagick->getImageWidth()-$width)/2,($this->imagick->getImageHeight()-$height)/2); 	   
