@@ -101,12 +101,43 @@ class Image
 	
 	public function crop($width, $height)
 	{
-		$format = $this->imagick->getImageFormat();
-		if ($format == 'GIF')
-			foreach ($this->imagick as $frame)
-				$frame->cropImage($width, $height, ($this->imagick->getImageWidth()-$width)/2,($this->imagick->getImageHeight()-$height)/2); 	   
-		else
-			$this->imagick->cropImage($width, $height, ($this->imagick->getImageWidth()-$width)/2,($this->imagick->getImageHeight()-$height)/2);
+		// $format = $this->imagick->getImageFormat();
+		// if ($format == 'GIF')
+		// 	foreach ($this->imagick as $frame)
+		// 		$frame->cropImage($width, $height, ($this->imagick->getImageWidth()-$width)/2,($this->imagick->getImageHeight()-$height)/2); 	   
+		// else
+		// 	$this->imagick->cropImage($width, $height, ($this->imagick->getImageWidth()-$width)/2,($this->imagick->getImageHeight()-$height)/2);
+		// return true;
+
+		$origW = $this->imagick->getImageWidth();
+		$origH = $this->imagick->getImageHeight();
+		
+		$widthRatio = $origW / $width;
+		$heightRatio = $origH / $height;
+		
+		$ratio = ($widthRatio >= $heightRatio)?$heightRatio:$widthRatio;
+		
+		$this->imagick->adaptiveResizeImage($origW/$ratio, $origH/$ratio, true);
+
+		// $newW = $origW * $ratio;
+		// $newH = $origH * $ratio;		
+		
+		// if($ratio == $widthRatio)
+		// {
+		// 	//get the y position for the crop
+		// 	$x = 0;
+		// 	$y = round(($origH - $height / $ratio) / 2);
+		// }else
+		// {
+		// 	//get the x position for the crop
+		// 	$y = 0;
+		// 	$x = round(($origW - $width / $ratio) / 2);
+		// }
+		
+		
+		// now we know the new image's dimensions
+
+		$this->imagick->cropImage($width, $height, ($this->imagick->getImageWidth()-$width)/2, ($this->imagick->getImageHeight()-$height)/2);
 		return true;
 	}
 
