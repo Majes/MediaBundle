@@ -57,6 +57,27 @@
             });
         };
 
+        if ($("#filterMediaButton")) {
+            $("#filterMediaButton").click(function(e) {
+                e.preventDefault();
+                var self = $(this);
+                
+                $('input[name=page]').val(1);
+                $("#mediaResultsAjax").empty();
+                $("#mediaResultsAjax").isotope('destroy');
+                $("form#formFilter").ajaxSubmit({
+                    success: function(response) {
+                        var $newItems = $(response);
+                        $('#mediaResultsAjax').append($newItems);
+                        $("#mediaResultsAjax").isotope();
+                        bindClick();
+                    }
+                });
+            });
+        };
+
+
+
         var bindClick = function() {
             $("a.pictureTrigger").off('click').on('click', function(e) {
 
