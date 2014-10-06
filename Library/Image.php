@@ -1,9 +1,9 @@
 <?php
 namespace Majes\MediaBundle\Library;
 
-class Image
-{
-	static $TYPE_JPEG = 'jpg';
+class Image {
+	static $TYPE_JPG = 'jpg';
+	static $TYPE_JPEG = 'jpeg';
 	static $TYPE_GIF = 'gif';
 	static $TYPE_PNG = 'png';
 
@@ -21,7 +21,7 @@ class Image
 	public function getImage(){						return stripslashes($this->image);}
 	public function getDestination(){						return $this->destinaton;}
 
-	public function setType($type){					if(in_array($type,array('jpg','gif','png'))) $this->type = $type;}
+	public function setType($type){					if(in_array($type,array('jpg','gif','png', 'jpeg'))) $this->type = $type;}
 	public function setFilename($filename){			$this->filename = $filename;}
 	public function setImage($image){				$this->image = $image;}
 	public function setDestination($dest){				$this->destination = $dest;}
@@ -33,10 +33,14 @@ class Image
 	public function init($filename, $destination = false, $quality = 80){
 		$this->quality = $quality;
 		$this->filename = $filename;
+		
+		// Init imagick objet with image file
 		$this->imagick->readImage($this->filename);
-		$format = $this->imagick->getImageFormat(); 
-		if ($format == 'GIF')
+		$this->setType(strtolower($this->imagick->getImageFormat()));
+
+		if ($this->type == self::$TYPE_GIF)
 			$this->imagick = $this->imagick->coalesceImages();
+
 		if(!$destination)
 			$this->destination = 'pictures';
 		else
@@ -50,18 +54,21 @@ class Image
         return ob_get_flush();
     }
 	public function writeImage () {
-		switch ($this->type)
-		{
+		switch ($this->type) {
+			case self::$TYPE_JPG:
 			case self::$TYPE_JPEG:
-				imagejpeg($this->image,null,$this->quality);
+				header("Content-Type: image/jpeg");
+				echo $this->imagick;
 				break;
 
 			case self::$TYPE_GIF:
-				imagegif($this->image,null);
+				header('Content-Type: image/gif');
+				echo $this->imagick;
 				break;
 
 			case self::$TYPE_PNG:
-				imagepng($this->image,null);
+				header('Content-Type: image/png');
+				echo $this->imagick;
 				break;
 
 			default:
@@ -70,9 +77,8 @@ class Image
 	}
 
 	public function saveImage ($imageName) {
-		$format = $this->imagick->getImageFormat();
 		if(!file_exists($this->destination.$imageName)){
-			if ($format == 'GIF')
+			if ($this->type == self::$TYPE_GIF)
 				$this->imagick->writeImages($this->destination.$imageName, true);
 			else
 				$this->imagick->writeImage($this->destination.$imageName);
@@ -83,24 +89,20 @@ class Image
 
 	public function resize ($width = NULL, $height = NULL, $fit = false) {
 		$fit = (bool) $fit;
-		$format = $this->imagick->getImageFormat();
 		// if no bounding box supplied, then return the original image
 		if ($width == NULL && $height == NULL){
 			return $this->imagick;
 		}else{
-			if ($format == 'GIF')
+			if ($this->type == self::$TYPE_GIF)
 				foreach ($this->imagick as $frame) 
 					$frame->adaptiveResizeImage($width, $height, true); 
 			else
 				$this->imagick->adaptiveResizeImage($width, $height, true);
 			return true;
 		}
-		
-		
 	}
 	
-	public function crop($width, $height)
-	{
+	public function crop($width, $height) {
 		// $format = $this->imagick->getImageFormat();
 		// if ($format == 'GIF')
 		// 	foreach ($this->imagick as $frame)
