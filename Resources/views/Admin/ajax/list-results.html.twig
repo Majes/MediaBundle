@@ -20,7 +20,7 @@
         <a href="{{ path('_media_delete', {'id': media.getId(), 'context': context}) }}" class="icon-trash" onclick="return CoreAdmin.Common.confirmDelete('{% trans %}Are you sure you want to delete this media?{% endtrans %}')"></a>
 
         {% if 'picture' in media.getType() %}
-            <a class="icon-zoom-in fancybox" href="{{ path('_media_load', {'id':media.getId(), 'width': '700'}) }}?url={{ asset(media.getWebPath()) }}" rel="gallery1" title="{{ media.getTitle() }}"></a>
+            <a class="icon-zoom-in fancybox" href="{{ path('_media_load', {'id':media.getId(), 'width': '700', 'height': '700'}) }}?url={{ asset(media.getWebPath()) }}" rel="gallery1" title="{{ media.getTitle() }}"></a>
         {% elseif 'video' in media.getType() %}
             <a class="icon-play fancyboxvideo" href="#" data-mime="{{ mime_type }}" data-src="{{ asset(media.getWebPath()) }}" rel="gallery{{media.getId()}}" title="{{ media.getTitle() }}"></a>
         {% elseif 'embed' in media.getType() %}

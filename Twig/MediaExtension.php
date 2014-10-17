@@ -58,6 +58,7 @@ class MediaExtension extends \Twig_Extension
         $css_class = isset($options['class']) ? ' class="'.$options['class'].'"' : '';
         $attribute_id = isset($options['id']) ? ' id="'.$options['id'].'"' : '';
         $attribute_data = '';
+        $style = isset($options['style']) ? ' style="'.$options['style'].'"' : '';
         
         if (isset($options['data'])){
             foreach ($options['data'] as $data_name => $data_value)
@@ -122,7 +123,7 @@ class MediaExtension extends \Twig_Extension
                        
                         $mediaSrc = '/'.$media->getWebCacheFolder().$futureFile.$media->getPath();
 
-                        $mediaTag = '<img src="'.$mediaSrc.'" title="'.$media->getTitle().'" alt="'.$media->getTitle().'"'.$css_class.$attribute_id.$attribute_data.'/>';
+                        $mediaTag = '<img src="'.$mediaSrc.'" title="'.$media->getTitle().'" alt="'.$media->getTitle().'"'.$css_class.$attribute_id.$attribute_data.$style.'/>';
                     }
             
                     //TODO: if private use media/load url to generate img

@@ -4,6 +4,7 @@ namespace Majes\MediaBundle\Entity;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\HttpFoundation\File\File;
 
 use Majes\CoreBundle\Annotation\DataTable;
 use Majes\CoreBundle\Entity\User\User;
@@ -261,6 +262,42 @@ class Media
     }
 
     /**
+     * Sets file.
+     *
+     * @param UploadedFile $file
+     */
+    public function setFileFromUrl($url)
+    {
+        $tempId = uniqid();
+        $rootDir = __DIR__.'/../../../../../../web';
+        $today = date('dmY');
+
+        if (!file_exists($rootDir.'/temp/'.$today)){
+            if (!mkdir($rootDir.'/temp/'.$today, 0755, true))
+                return false;
+        }
+
+        $path = $rootDir.'/temp/'.$today.'/'.$tempId.'.'.pathinfo($url, PATHINFO_EXTENSION);
+        //$this->tempPath = $path;
+        
+        if (!file_put_contents($path, file_get_contents($url)))
+            return false;
+
+        $pathinfo = pathinfo($path);
+        $basename = $pathinfo['basename'];
+
+        try {
+            $uploadedFile = new File($path);
+        } catch (FileNotFoundException $ex) {
+            throw new TransformationFailedException($ex->getMessage());
+        }
+        $this->setFile($uploadedFile);
+
+        //unlink($path);
+        //rmdir($rootDir.'/temp/'.$today);
+    }
+
+    /**
      * @inheritDoc
      */
     public function setPath($path)
@@ -339,12 +376,16 @@ class Media
             rename(str_replace($this->folder,$this->folder_temp,$this->getUploadRootDir()),$this->getUploadRootDir());
             return;
         }
+
     
         // if there is an error when moving the file, an exception will
         // be automatically thrown by move(). This will properly prevent
         // the entity from being persisted to the database on error        
         $this->getFile()->move($this->getUploadRootDir(), $this->path);
-
+        
+        $isset = $this->getFile()->getPathname();
+        if(is_file($isset))
+            unlink($isset);        
         // check if we have an old image
         if (isset($this->file_temp) && is_file($this->file_temp)) {
             // delete the old image
