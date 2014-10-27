@@ -30,7 +30,7 @@ class Image {
 		$this->imagick = new \Imagick();
 	}
 	
-	public function init($filename, $destination = false, $quality = 80){
+	public function init($filename, $destination = false, $quality = 100){
 		$this->quality = $quality;
 		$this->filename = $filename;
 		
@@ -80,8 +80,11 @@ class Image {
 		if(!file_exists($this->destination.$imageName)){
 			if ($this->type == self::$TYPE_GIF)
 				$this->imagick->writeImages($this->destination.$imageName, true);
-			else
+			else{
+				$this->imagick->setImageCompression(\Imagick::COMPRESSION_JPEG);
+                		$this->imagick->setImageCompressionQuality($this->quality);
 				$this->imagick->writeImage($this->destination.$imageName);
+			}
 			return true;
 		}
 		return false;
