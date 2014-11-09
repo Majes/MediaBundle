@@ -82,6 +82,7 @@ class Image {
 				$this->imagick->writeImages($this->destination.$imageName, true);
 			else{
 				$this->imagick->setImageCompression(\Imagick::COMPRESSION_JPEG);
+                		$this->imagick->setImageInterlaceScheme(\Imagick::INTERLACE_PLANE);
                 		$this->imagick->setImageCompressionQuality($this->quality);
 				$this->imagick->writeImage($this->destination.$imageName);
 			}
@@ -100,7 +101,7 @@ class Image {
 				foreach ($this->imagick as $frame) 
 					$frame->adaptiveResizeImage($width, $height, true); 
 			else
-				$this->imagick->adaptiveResizeImage($width, $height, true);
+				$this->imagick->thumbnailImage($width, $height, true);
 			return true;
 		}
 	}
@@ -122,7 +123,8 @@ class Image {
 		
 		$ratio = ($widthRatio >= $heightRatio)?$heightRatio:$widthRatio;
 		
-		$this->imagick->adaptiveResizeImage($origW/$ratio, $origH/$ratio, true);
+		//$this->imagick->adaptiveResizeImage($origW/$ratio, $origH/$ratio, true);
+		$this->imagick->thumbnailImage($origW/$ratio, $origH/$ratio, true);
 
 		// $newW = $origW * $ratio;
 		// $newH = $origH * $ratio;		
