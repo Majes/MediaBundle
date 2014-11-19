@@ -384,8 +384,9 @@ class Media
         $this->getFile()->move($this->getUploadRootDir(), $this->path);
         
         $isset = $this->getFile()->getPathname();
-        if(is_file($isset))
-            unlink($isset);        
+        //if(is_file($isset))
+        //    unlink($isset);        
+        
         // check if we have an old image
         if (isset($this->file_temp) && is_file($this->file_temp)) {
             // delete the old image
