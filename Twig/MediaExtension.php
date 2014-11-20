@@ -140,6 +140,7 @@ class MediaExtension extends \Twig_Extension
                                     <source type="video/flash" src="/'.$media->getWebPath().'">
                                 </video>
                             </div>';
+                $mediaSrc = '/'.$media->getWebCacheFolder().$media->getPath();
                 break;
 
             case 'embed':
