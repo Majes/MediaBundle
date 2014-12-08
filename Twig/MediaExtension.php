@@ -130,6 +130,9 @@ class MediaExtension extends \Twig_Extension
                                 $lib_image->resize($width, $height);
 
                             $lib_image->saveImage($futureFile.$media->getPath());
+                        }else
+                        {
+                            $lib_image->init($destination.$futureFile.$media->getPath());
                         }
                        
                         //Get width and height
