@@ -40,6 +40,8 @@ class Image {
 
 		if ($this->type == self::$TYPE_GIF)
 			$this->imagick = $this->imagick->coalesceImages();
+		//else
+		//	$this->imagick->setImageColorspace(13);
 
 		if(!$destination)
 			$this->destination = 'pictures';
@@ -82,7 +84,6 @@ class Image {
 				$this->imagick->writeImages($this->destination.$imageName, true);
 			else{
 				$this->imagick->setImageCompression(\Imagick::COMPRESSION_JPEG);
-                		$this->imagick->setImageInterlaceScheme(\Imagick::INTERLACE_PLANE);
                 		$this->imagick->setImageCompressionQuality($this->quality);
 				$this->imagick->writeImage($this->destination.$imageName);
 			}
@@ -101,9 +102,16 @@ class Image {
 				foreach ($this->imagick as $frame) 
 					$frame->adaptiveResizeImage($width, $height, true); 
 			else
-				$this->imagick->thumbnailImage($width, $height, true);
+				$this->imagick->adaptiveResizeImage($width, $height, true);
 			return true;
 		}
+	}
+
+	public function getSize(){
+		$W = $this->imagick->getImageWidth();
+		$H = $this->imagick->getImageHeight();
+
+		return array('width' => $W, 'height' => $H);
 	}
 	
 	public function crop($width, $height) {
@@ -123,8 +131,7 @@ class Image {
 		
 		$ratio = ($widthRatio >= $heightRatio)?$heightRatio:$widthRatio;
 		
-		//$this->imagick->adaptiveResizeImage($origW/$ratio, $origH/$ratio, true);
-		$this->imagick->thumbnailImage($origW/$ratio, $origH/$ratio, true);
+		$this->imagick->adaptiveResizeImage($origW/$ratio, $origH/$ratio, true);
 
 		// $newW = $origW * $ratio;
 		// $newH = $origH * $ratio;		

@@ -132,9 +132,12 @@ class MediaExtension extends \Twig_Extension
                             $lib_image->saveImage($futureFile.$media->getPath());
                         }
                        
+                        //Get width and height
+                        $sizes = $lib_image->getSize();
+
                         $mediaSrc = '/'.$media->getWebCacheFolder().$futureFile.$media->getPath();
 
-                        $mediaTag = '<img src="'.$mediaSrc.'" title="'.$media->getTitle().'" alt="'.$media->getTitle().'"'.$css_class.$attribute_id.$attribute_data.$style.'/>';
+                        $mediaTag = '<img width="'.$sizes['width'].'" height="'.$sizes['height'].'" src="'.$mediaSrc.'" title="'.$media->getTitle().'" alt="'.$media->getTitle().'"'.$css_class.$attribute_id.$attribute_data.$style.'/>';
                     }
             
                     //TODO: if private use media/load url to generate img
