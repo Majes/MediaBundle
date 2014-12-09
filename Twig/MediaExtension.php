@@ -35,6 +35,7 @@ class MediaExtension extends \Twig_Extension
     {
         return array(
             new \Twig_SimpleFunction('teelMediaLoad', array($this, 'teelMediaLoad')),
+            new \Twig_SimpleFunction('teelMedia', array($this, 'teelMedia'))
         );
     }
 
@@ -192,6 +193,16 @@ class MediaExtension extends \Twig_Extension
         
     }
 
+    public function teelMedia($media)
+    {
+        if (is_int($media)) {
+            $media = $this->_em->getRepository('MajesMediaBundle:Media')->findOneById($media);
+            return '/'.$media->getWebPath();
+        }else{
+            return "Media not found";
+        }
+
+    }
 
     public function getName()
     {
