@@ -3,6 +3,7 @@ namespace Majes\MediaBundle\Twig;
 
 use Majes\MediaBundle\Entity\Media;
 use Majes\MediaBundle\Library\Image;
+use Majes\MediaBundle\Library\ImageFallback;
 
 class MediaExtension extends \Twig_Extension
 {
@@ -116,7 +117,12 @@ class MediaExtension extends \Twig_Extension
                         $file = $media->getAbsolutePath();
                         $destination = $media->getCachePath();
 
-                        $lib_image = new Image();
+                        if(!class_exists("Imagick"))
+                            $lib_image = new ImageFallback();
+                        else
+                            $lib_image = new Image();
+
+                        
                         if(is_null($width) && is_null($height))
                             $futureFile = '';
                         else

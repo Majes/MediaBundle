@@ -5,6 +5,7 @@ namespace Majes\MediaBundle\Services;
 use Doctrine\ORM\EntityManager;
 use Majes\MediaBundle\Entity\Media;
 use Majes\MediaBundle\Library\Image;
+use Majes\MediaBundle\Library\ImageFallback;
 
 class MediaService {
 
@@ -86,7 +87,12 @@ class MediaService {
                     $file = $media->getAbsolutePath();
                     $destination = $media->getCachePath();
 
-                    $lib_image = new Image();
+                    if(!class_exists("Imagick"))
+                        $lib_image = new ImageFallback();
+                    else
+                        $lib_image = new Image();
+
+
                     if (!is_file($destination . $prefix . $width . 'x' . $height . '_' . $media->getPath())) {
                         $lib_image->init($file, $destination);
 
