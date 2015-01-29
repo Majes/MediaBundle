@@ -6,6 +6,10 @@ _media_edit:
     pattern:  /media/edit/{context}/{id}
     defaults: { _controller: MajesMediaBundle:Admin:edit, context: full, id: null }
 
+_media_edit_multiple:
+    pattern:  /media/multiple/edit/{context}
+    defaults: { _controller: MajesMediaBundle:Admin:multipleEdit, context: full }
+
 _media_delete:
     pattern:  /media/delete/{context}/{id}
     defaults: { _controller: MajesMediaBundle:Admin:delete, context: full, id: null }

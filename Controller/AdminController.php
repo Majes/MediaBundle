@@ -6,10 +6,12 @@ use Majes\CoreBundle\Controller\SystemController;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use JMS\SecurityExtraBundle\Annotation\Secure;
 use Doctrine\Common\Annotations\AnnotationReader;
+use Symfony\Component\HttpFoundation\Response;
 
 use Majes\MediaBundle\Entity\Media;
 
 use Majes\MediaBundle\Form\MediaType;
+
 
 class AdminController extends Controller implements SystemController
 {
@@ -119,6 +121,55 @@ class AdminController extends Controller implements SystemController
             'pageSubTitle' => $pageSubTitle,
             'context' => $context,
             'form' => $form->createView()));
+    }
+
+    /**
+     * @Secure(roles="ROLE_MEDIA_EDIT,ROLE_SUPERADMIN")
+     *
+     */
+    public function multipleEditAction($context)
+    {
+        $request = $this->getRequest();
+
+        $em = $this->getDoctrine()->getManager();
+        $media = null;
+
+        if($request->isXmlHttpRequest()){
+
+                if(is_null($media)){
+
+                    $media = new Media();
+                    $media->setCreateDate(new \DateTime(date('Y-m-d H:i:s')));
+                    $media->setUser($this->_user);
+                    $media->setFile($request->files->get('file'));
+                    $folder = $request->request->get('folder');
+                    if(!empty($folder))
+                        $media->setFolder($folder);
+                    else
+                        $media->setFolder('Cms');
+                    if(!is_null($request->request->get('protected')))
+                        $media->setIsProtected($request->request->get('protected'));
+
+                }
+
+                $em = $this->getDoctrine()->getManager();
+
+                $em->persist($media);
+                $em->flush();
+
+                return new Response(json_encode(array('status' => 200)));
+
+        }
+
+        $pageSubTitle = empty($media) ? $this->_translator->trans('Add a new media') : $this->_translator->trans('Edit media') . ' ' . $media->getTitle();
+        
+
+        return $this->render('MajesMediaBundle:Admin:multipleEdit.html.twig', array(
+            'pageTitle' => $this->_translator->trans('Media management'),
+            'pageSubTitle' => $pageSubTitle,
+            'context' => $context,
+            // 'form' => $form->createView()
+            ));
     }
 
     /**
