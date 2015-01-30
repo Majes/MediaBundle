@@ -142,6 +142,8 @@ class AdminController extends Controller implements SystemController
                     $media->setCreateDate(new \DateTime(date('Y-m-d H:i:s')));
                     $media->setUser($this->_user);
                     $media->setFile($request->files->get('file'));
+                    $media->setTitle($request->files->get('file')->getClientOriginalName());
+                    $media->setTypeByMime($request->files->get('file')->getMimeType());
                     $folder = $request->request->get('folder');
                     if(!empty($folder))
                         $media->setFolder($folder);

@@ -218,6 +218,34 @@ class Media
     /**
      * @inheritDoc
      */
+    public function setTypeByMime($mimeType)
+    {
+        $mimeType = explode('/', $mimeType);
+        $type = 'picture';
+        switch ($mimeType[0]) {
+            case 'image':
+                $type = 'picture';
+                break;
+
+            case 'video':
+                $type = 'video';
+                break;
+
+            case 'application':
+                $type = 'document'; 
+                break;
+            
+            default:
+                $type='picture';
+                break;
+        }
+        $this->type = $type;
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function setFolder($folder)
     {
         $this->folder = $folder;
