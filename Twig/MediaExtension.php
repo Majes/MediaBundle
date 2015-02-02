@@ -146,7 +146,7 @@ class MediaExtension extends \Twig_Extension
                         $sizes = $lib_image->getSize();
 
                         $mediaSrc = '/'.$media->getWebCacheFolder().$futureFile.$media->getPath();
-
+                        
                         $mediaTag = '<img width="'.$sizes['width'].'" height="'.$sizes['height'].'" src="'.$mediaSrc.'" title="'.$media->getTitle().'" alt="'.$media->getTitle().'"'.$css_class.$attribute_id.$attribute_data.$style.'/>';
                     }
             
@@ -192,7 +192,11 @@ class MediaExtension extends \Twig_Extension
         //TODO: if media is not picture, then do what should be done to display it (video, embed, document to download)
         if (isset($options['src'])){
             if($options['src'])
-                return $mediaSrc;
+                if(isset($options['src']) && $options['nocache'])
+                    return '/'.$media->getWebPath();
+                else
+                    return $mediaSrc;
+
         }else{
             return $mediaTag;
         }
