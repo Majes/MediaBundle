@@ -192,7 +192,7 @@ class MediaExtension extends \Twig_Extension
         //TODO: if media is not picture, then do what should be done to display it (video, embed, document to download)
         if (isset($options['src'])){
             if($options['src'])
-                if(isset($options['src']) && $options['nocache'])
+                if(isset($options['nocache']) && $options['nocache'])
                     return '/'.$media->getWebPath();
                 else
                     return $mediaSrc;
