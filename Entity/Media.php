@@ -28,6 +28,8 @@ class Media
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
+    
+    private $collect;
 
     /**
      * @ORM\ManyToOne(targetEntity="Majes\CoreBundle\Entity\User\User")
@@ -98,6 +100,31 @@ class Media
     public function getId()
     {
         return $this->id;
+    }
+    
+    /**
+    * @inheritDoc
+    */
+    public function getCollect()
+    {
+        return $this;
+    }
+
+    /**
+    * @inheritDoc
+    */
+    public function getCollected()
+    {
+        return $this->collect;
+    }
+    
+    /**
+    * @inheritDoc
+    */
+    public function setCollect($collect)
+    {
+        $this->collect = $collect;
+        return $this;
     }
 
     /**
