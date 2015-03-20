@@ -66,20 +66,6 @@ class MediaExtension extends \Twig_Extension
             foreach ($options['data'] as $data_name => $data_value)
                 $attribute_data .= 'data-'.$data_name.'='.$data_value;
         }
-        
-        $width = is_null($width) ? 0 : $width;
-        // Preserve aspect ratio on with auto parameter on height
-        if ( $height == "auto" && !is_null($width) ) {
-            list($width_origin, $height_origin) = getimagesize($media->getAbsolutePath());
-            $height = $width*$height_origin/$width_origin;
-        }
-        
-        $height = is_null($height) ? 0 : $height;
-        // Preserve aspect ratio on with auto parameter on width
-        if ( $width == "auto" && !is_null($height) ) {
-            list($width_origin, $height_origin) = getimagesize($media->getAbsolutePath());
-            $width = $height*$width_origin/$height_origin;
-        }
 
         //Get file type
         if($media->getType() != 'embed'){
@@ -106,6 +92,20 @@ class MediaExtension extends \Twig_Extension
 
         switch ($this->_mime_types[$mime_type]) {
             case 'image':
+                
+                $width = is_null($width) ? 0 : $width;
+                // Preserve aspect ratio on with auto parameter on height
+                if ( $height == "auto" && !is_null($width) ) {
+                    list($width_origin, $height_origin) = getimagesize($media->getAbsolutePath());
+                    $height = $width*$height_origin/$width_origin;
+                }
+                
+                $height = is_null($height) ? 0 : $height;
+                // Preserve aspect ratio on with auto parameter on width
+                if ( $width == "auto" && !is_null($height) ) {
+                    list($width_origin, $height_origin) = getimagesize($media->getAbsolutePath());
+                    $width = $height*$width_origin/$height_origin;
+                }
                     //TODO: if public, check if thumb exists, else create it, then get url
                     if($media->getIsProtected() == 0){
                         //check if cached file exist
