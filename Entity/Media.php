@@ -62,6 +62,8 @@ class Media
      */
     private $path=null;
 
+    private $pathForced=null;
+
     private $file;
 
     /**
@@ -364,6 +366,15 @@ class Media
     /**
      * @inheritDoc
      */
+    public function setPathForced($pathForced)
+    {
+        $this->pathForced = $pathForced;
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function setEmbedded($embedded)
     {
         $this->embedded = $embedded;
@@ -406,7 +417,7 @@ class Media
         if (null !== $this->getFile()) {
             // do whatever you want to generate a unique name
             $filename = sha1(uniqid(mt_rand(), true));
-            $this->path = $filename.'.'.$this->getFile()->guessExtension();
+            $this->path = empty($this->pathForced) ? $filename.'.'.$this->getFile()->guessExtension() : $this->pathForced;
         }
     }
 
