@@ -153,20 +153,31 @@ class MediaService {
         $file = $media->getAbsolutePath();
         $destination = $media->getCachePath();
 
-        $lib_image->init($file, $destination);
-
-        list($width_origin, $height_origin) = getimagesize($media->getAbsolutePath());
-        $ratio = $height_origin/$width_origin;
-
         foreach($this->_setup['sizes'] as $key => $size){
 
-            $height = $size['width'] * $ratio;
+            $lib_image->init($file, $destination);
 
-            $suffix = $size['ratio'] == 2 ? '@2x.' : '';
+            list($width_origin, $height_origin) = getimagesize($media->getAbsolutePath());
+            $ratio = $height_origin/$width_origin;
+
+            if($size['ratio'] == 2){
+                $width = $size['width'] * 2;
+                $height = $width * $ratio;
+
+                $suffix = '@2x';
+
+                $lib_image->resize($width, $height);
+                $lib_image->saveImage($key . $suffix . '.' . $media->getPath() );
+                $sizes[$key.'@2x'] = '/' . $media->getWebCacheFolder() . $key . $suffix. '.'  . $media->getPath();
+            }
+
+            $height = $size['width'] * $ratio;
+            $suffix = '';
+
             $lib_image->resize($size['width'], $height);
-            $lib_image->saveImage($key . '.' . $suffix . $media->getPath() );
-            
-            $sizes[$key] = '/' . $media->getWebCacheFolder() . $key . '.' . $suffix . '.' . $media->getPath();
+            $lib_image->saveImage($key . $suffix . '.' . $media->getPath() );
+            $sizes[$key] = '/' . $media->getWebCacheFolder() . $key . $suffix. '.'  . $media->getPath();
+
 
         }
 
