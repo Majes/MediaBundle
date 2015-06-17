@@ -162,9 +162,9 @@ class MediaService {
 
             $height = $size['width'] * $ratio;
 
-            $suffix = $size['ratio'] == 2 ? '@2x' : '';
+            $suffix = $size['ratio'] == 2 ? '@2x.' : '';
             $lib_image->resize($size['width'], $height);
-            $lib_image->saveImage($key . '.' . $suffix . '.' . $media->getPath() );
+            $lib_image->saveImage($key . '.' . $suffix . $media->getPath() );
             
             $sizes[$key] = '/' . $media->getWebCacheFolder() . $key . '.' . $suffix . '.' . $media->getPath();
 
