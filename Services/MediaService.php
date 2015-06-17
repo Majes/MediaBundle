@@ -11,9 +11,12 @@ class MediaService {
 
     private $_mime_types;
     private $_em;
+    private $_setup;
 
-    public function __construct($em) {
+    public function __construct($em, $setup = null) {
         $this->_em = $em;
+        $this->_setup = $setup;
+
         $this->_mime_types = array(
             'image/jpeg' => 'image',
             'image/jpg' => 'image',
@@ -129,6 +132,48 @@ class MediaService {
         //TODO: if media is not picture, then do what should be done to display it (video, embed, document to download)
 
         return $mediaSrc;
+    }
+
+    public function createSizesCache($media){
+
+        if (is_int($media)) {
+            $media = $this->_em->getRepository('MajesMediaBundle:Media')->findOneById($media);
+        }
+
+        if(empty($media)) return false;
+        if ($media->getType() != 'picture') return false;
+
+        $sizes = array();
+
+        if(!class_exists("Imagick"))
+            $lib_image = new ImageFallback();
+        else
+            $lib_image = new Image();
+
+        $file = $media->getAbsolutePath();
+        $destination = $media->getCachePath();
+
+        $lib_image->init($file, $destination);
+
+        list($width_origin, $height_origin) = getimagesize($media->getAbsolutePath());
+        $ratio = $height_origin/$width_origin;
+
+        foreach($this->_setup['sizes'] as $key => $size){
+
+            $height = $size['width'] * $ratio;
+
+            $suffix = $size['ratio'] == 2 ? '@2x' : '';
+            $lib_image->resize($size['width'], $height);
+            $lib_image->saveImage($key . '.' . $suffix . '.' . $media->getPath() );
+            
+            $sizes[$key] = '/' . $media->getWebCacheFolder() . $key . '.' . $suffix . '.' . $media->getPath();
+
+        }
+
+        
+        
+        return $sizes;
+
     }
 
 }
