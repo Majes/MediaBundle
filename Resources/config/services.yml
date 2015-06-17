@@ -2,21 +2,27 @@ parameters:
     media:
         sizes:
             xxlarge: 
+                vw: 1400
                 width: 3000
                 ratio: 2
             xlarge:
+                vw: 1148
                 width: 1400
                 ratio: 1
             large: 
+                vw: 988
                 width: 1148
                 ratio: 1
             medium:
+                vw: 748
                 width: 988
                 ratio: 1
             small:
+                vw: 480
                 width: 748
                 ratio: 1
             xsmall:
+                vw: 0
                 width: 480
                 ratio: 1
 
