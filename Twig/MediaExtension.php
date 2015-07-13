@@ -1,4 +1,4 @@
-<?php 
+<?php
 namespace Majes\MediaBundle\Twig;
 
 use Majes\MediaBundle\Entity\Media;
@@ -61,7 +61,7 @@ class MediaExtension extends \Twig_Extension
         $attribute_id = isset($options['id']) ? ' id="'.$options['id'].'"' : '';
         $attribute_data = '';
         $style = isset($options['style']) ? ' style="'.$options['style'].'"' : '';
-        
+
         if (isset($options['data'])){
             foreach ($options['data'] as $data_name => $data_value)
                 $attribute_data .= 'data-'.$data_name.'='.$data_value;
@@ -88,32 +88,33 @@ class MediaExtension extends \Twig_Extension
         $crop = $crop ? 1 : 0;
 
         $mediaTag = '';
-        
+
 
         switch ($this->_mime_types[$mime_type]) {
             case 'image':
-                
+
                 $width = is_null($width) ? 0 : $width;
                 // Preserve aspect ratio on with auto parameter on height
                 if ( $height == "auto" && !is_null($width) ) {
                     list($width_origin, $height_origin) = getimagesize($media->getAbsolutePath());
                     $height = $width*$height_origin/$width_origin;
                 }
-                
+
                 $height = is_null($height) ? 0 : $height;
                 // Preserve aspect ratio on with auto parameter on width
                 if ( $width == "auto" && !is_null($height) ) {
                     list($width_origin, $height_origin) = getimagesize($media->getAbsolutePath());
                     $width = $height*$width_origin/$height_origin;
                 }
+
                     //TODO: if public, check if thumb exists, else create it, then get url
                     if($media->getIsProtected() == 0){
                         //check if cached file exist
                         $width = $width <= 0 ? null : $width;
                         $height = $height <= 0 ? null : $height;
-                
+
                         $prefix = $crop ? 'crop.' : '';
-                                
+
                         $file = $media->getAbsolutePath();
                         $destination = $media->getCachePath();
 
@@ -122,15 +123,16 @@ class MediaExtension extends \Twig_Extension
                         else
                             $lib_image = new Image();
 
-                        
+
                         if(is_null($width) && is_null($height))
                             $futureFile = '';
                         else
                             $futureFile = $prefix.$width.'x'.$height.'_';
 
                         if(!is_file($destination.$futureFile.$media->getPath())){
+
                             $lib_image->init($file, $destination);
-                            
+
                             if($crop)
                                 $lib_image->crop($width, $height);
                             elseif(!is_null($width) && !is_null($height))
@@ -139,17 +141,19 @@ class MediaExtension extends \Twig_Extension
                             $lib_image->saveImage($futureFile.$media->getPath());
                         }else
                         {
+                            if($options['src'])
+                                return '/'.$media->getWebCacheFolder().$futureFile.$media->getPath();
+
                             $lib_image->init($destination.$futureFile.$media->getPath());
                         }
-                       
+
                         //Get width and height
                         $sizes = $lib_image->getSize();
-
                         $mediaSrc = '/'.$media->getWebCacheFolder().$futureFile.$media->getPath();
-                        
+
                         $mediaTag = '<img width="'.$sizes['width'].'" height="'.$sizes['height'].'" src="'.$mediaSrc.'" title="'.$media->getTitle().'" alt="'.$media->getTitle().'"'.$css_class.$attribute_id.$attribute_data.$style.'/>';
                     }
-            
+
                     //TODO: if private use media/load url to generate img
                     else if($media->getIsProtected() == 1){
                         $mediaTag = '<img src="/media/load/'.$media->getId().'/'.$crop.'/'.$width.'/'.$height.'" width="'.$width.'" height="'.$height.'" title="'.$media->getTitle().'" alt="'.$media->getTitle().'"'.$css_class.$attribute_id.$attribute_data.' onerror=\'this.src="/bundles/majesmedia/img/icon-document.png"\'/>';
@@ -181,14 +185,14 @@ class MediaExtension extends \Twig_Extension
                 $mediaTag = '';
                 $mediaSrc = '';
                 break;
-            
+
             default:
                 $mediaTag = '<a href="/media/download/'.$media->getId().'" target="_blank" title="'.$media->getTitle().'"'.$css_class.$attribute_id.$attribute_data.'>Download file</a>';
                 $mediaSrc = '';
                 break;
         }
-        
-        
+
+
         //TODO: if media is not picture, then do what should be done to display it (video, embed, document to download)
         if (isset($options['src'])){
             if($options['src'])
@@ -200,7 +204,7 @@ class MediaExtension extends \Twig_Extension
         }else{
             return $mediaTag;
         }
-        
+
     }
 
     public function teelMedia($media)
