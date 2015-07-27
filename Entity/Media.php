@@ -28,7 +28,7 @@ class Media
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
-    
+
     private $collect;
 
     /**
@@ -103,7 +103,7 @@ class Media
     {
         return $this->id;
     }
-    
+
     /**
     * @inheritDoc
     */
@@ -119,7 +119,7 @@ class Media
     {
         return $this->collect;
     }
-    
+
     /**
     * @inheritDoc
     */
@@ -261,9 +261,9 @@ class Media
                 break;
 
             case 'application':
-                $type = 'document'; 
+                $type = 'document';
                 break;
-            
+
             default:
                 $type='picture';
                 break;
@@ -336,7 +336,7 @@ class Media
 
         $path = $rootDir.'/temp/'.$today.'/'.$tempId.'.'.pathinfo($url, PATHINFO_EXTENSION);
         //$this->tempPath = $path;
-        
+
         if (!file_put_contents($path, file_get_contents($url)))
             return false;
 
@@ -439,20 +439,22 @@ class Media
 
         // the file property can be empty if the field is not required
         if (null === $this->getFile()) {
-            rename(str_replace($this->folder,$this->folder_temp,$this->getUploadRootDir()),$this->getUploadRootDir());
+            $old = str_replace($this->folder,$this->folder_temp,$this->getUploadRootDir());
+            if(is_dir($old))
+                rename($old,$this->getUploadRootDir());
             return;
         }
 
-    
+
         // if there is an error when moving the file, an exception will
         // be automatically thrown by move(). This will properly prevent
-        // the entity from being persisted to the database on error        
+        // the entity from being persisted to the database on error
         $this->getFile()->move($this->getUploadRootDir(), $this->path);
-        
+
         $isset = $this->getFile()->getPathname();
         //if(is_file($isset))
-        //    unlink($isset);        
-        
+        //    unlink($isset);
+
         // check if we have an old image
         if (isset($this->file_temp) && is_file($this->getUploadRootDir().'/'.$this->file_temp)) {
             // delete the old image
@@ -521,7 +523,7 @@ class Media
 
     public function getWebCacheFolder()
     {
-        
+
         $subfolder = $this->getCreateDate()->format('Y-m-d').'/'.$this->getId().'/cache';
 
         return null === $this->path
@@ -538,10 +540,10 @@ class Media
         else{
             if(!is_dir(__DIR__.'/../../../../../../app/private'))
                 mkdir(__DIR__.'/../../../../../../app/private', 0775);
-            
+
             if(!is_dir(__DIR__.'/../../../../../../app/private/media'))
                 mkdir(__DIR__.'/../../../../../../app/private/media', 0775);
-            
+
             $folder = __DIR__.'/../../../../../../app/private/'.$this->getUploadDir();
         }
 

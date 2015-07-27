@@ -141,7 +141,7 @@ class MediaExtension extends \Twig_Extension
                             $lib_image->saveImage($futureFile.$media->getPath());
                         }else
                         {
-                            if($options['src'])
+                            if(isset($options['src']))
                                 return '/'.$media->getWebCacheFolder().$futureFile.$media->getPath();
 
                             $lib_image->init($destination.$futureFile.$media->getPath());
