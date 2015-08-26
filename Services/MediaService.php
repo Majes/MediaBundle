@@ -49,7 +49,7 @@ class MediaService {
                 $media = $this->_em->getRepository('MajesMediaBundle:Media')->findOneById($default);
             else if (file_exists($default))
                 return $default;
-            else 
+            else
                 return 'Media not found';
         }
 
@@ -134,7 +134,7 @@ class MediaService {
         return $mediaSrc;
     }
 
-    public function createSizesCache($media){
+    public function createSizesCache($media, $sizes = null){
 
         if (is_int($media)) {
             $media = $this->_em->getRepository('MajesMediaBundle:Media')->findOneById($media);
@@ -152,6 +152,9 @@ class MediaService {
 
         $file = $media->getAbsolutePath();
         $destination = $media->getCachePath();
+
+        if(!is_null($sizes))
+            $this->_setup['sizes'] = $sizes;
 
         foreach($this->_setup['sizes'] as $key => $size){
 
@@ -181,8 +184,8 @@ class MediaService {
 
         }
 
-        
-        
+
+
         return $sizes;
 
     }
