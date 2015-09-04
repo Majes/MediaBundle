@@ -61,6 +61,7 @@ class MediaExtension extends \Twig_Extension
         $attribute_id = isset($options['id']) ? ' id="'.$options['id'].'"' : '';
         $attribute_data = '';
         $style = isset($options['style']) ? ' style="'.$options['style'].'"' : '';
+        $title = isset($options['title']) ? $options['title'] : $media->getTitle();
 
         if (isset($options['data'])){
             foreach ($options['data'] as $data_name => $data_value)
@@ -151,12 +152,12 @@ class MediaExtension extends \Twig_Extension
                         $sizes = $lib_image->getSize();
                         $mediaSrc = '/'.$media->getWebCacheFolder().$futureFile.$media->getPath();
 
-                        $mediaTag = '<img width="'.$sizes['width'].'" height="'.$sizes['height'].'" src="'.$mediaSrc.'" title="'.$media->getTitle().'" alt="'.$media->getTitle().'"'.$css_class.$attribute_id.$attribute_data.$style.'/>';
+                        $mediaTag = '<img width="'.$sizes['width'].'" height="'.$sizes['height'].'" src="'.$mediaSrc.'" title="'.$title.'" alt="'.$title.'"'.$css_class.$attribute_id.$attribute_data.$style.'/>';
                     }
 
                     //TODO: if private use media/load url to generate img
                     else if($media->getIsProtected() == 1){
-                        $mediaTag = '<img src="/media/load/'.$media->getId().'/'.$crop.'/'.$width.'/'.$height.'" width="'.$width.'" height="'.$height.'" title="'.$media->getTitle().'" alt="'.$media->getTitle().'"'.$css_class.$attribute_id.$attribute_data.' onerror=\'this.src="/bundles/majesmedia/img/icon-document.png"\'/>';
+                        $mediaTag = '<img src="/media/load/'.$media->getId().'/'.$crop.'/'.$width.'/'.$height.'" width="'.$width.'" height="'.$height.'" title="'.$title.'" alt="'.$title.'"'.$css_class.$attribute_id.$attribute_data.' onerror=\'this.src="/bundles/majesmedia/img/icon-document.png"\'/>';
                     }
                 break;
 
