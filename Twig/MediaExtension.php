@@ -36,7 +36,8 @@ class MediaExtension extends \Twig_Extension
     {
         return array(
             new \Twig_SimpleFunction('teelMediaLoad', array($this, 'teelMediaLoad')),
-            new \Twig_SimpleFunction('teelMedia', array($this, 'teelMedia'))
+            new \Twig_SimpleFunction('teelMedia', array($this, 'teelMedia')),
+            new \Twig_SimpleFunction('textToSeo', array($this, 'textToSeo'))
         );
     }
 
@@ -62,6 +63,10 @@ class MediaExtension extends \Twig_Extension
         $attribute_data = '';
         $style = isset($options['style']) ? ' style="'.$options['style'].'"' : '';
         $title = isset($options['title']) ? $options['title'] : $media->getTitle();
+
+        $path = isset($options['path']) ? $options['path'] : null;
+        $mediaPath = is_null($path) ? $media->getPath() : $path;
+
 
         if (isset($options['data'])){
             foreach ($options['data'] as $data_name => $data_value)
@@ -130,7 +135,7 @@ class MediaExtension extends \Twig_Extension
                         else
                             $futureFile = $prefix.$width.'x'.$height.'_';
 
-                        if(!is_file($destination.$futureFile.$media->getPath())){
+                        if(!is_file($destination.$futureFile.$mediaPath)){
 
                             $lib_image->init($file, $destination);
 
@@ -139,18 +144,18 @@ class MediaExtension extends \Twig_Extension
                             elseif(!is_null($width) && !is_null($height))
                                 $lib_image->resize($width, $height);
 
-                            $lib_image->saveImage($futureFile.$media->getPath());
+                            $lib_image->saveImage($futureFile.$mediaPath);
                         }else
                         {
                             if(isset($options['src']) && $options['src'])
-                                return '/'.$media->getWebCacheFolder().$futureFile.$media->getPath();
+                                return '/'.$media->getWebCacheFolder().$futureFile.$mediaPath;
 
-                            $lib_image->init($destination.$futureFile.$media->getPath());
+                            $lib_image->init($destination.$futureFile.$mediaPath);
                         }
 
                         //Get width and height
                         $sizes = $lib_image->getSize();
-                        $mediaSrc = '/'.$media->getWebCacheFolder().$futureFile.$media->getPath();
+                        $mediaSrc = '/'.$media->getWebCacheFolder().$futureFile.$mediaPath;
 
                         $mediaTag = '<img width="'.$sizes['width'].'" height="'.$sizes['height'].'" src="'.$mediaSrc.'" title="'.$title.'" alt="'.$title.'"'.$css_class.$attribute_id.$attribute_data.$style.'/>';
                     }
@@ -216,6 +221,20 @@ class MediaExtension extends \Twig_Extension
         }else{
             return "Media not found";
         }
+
+    }
+
+    public function textToSeo($string, $separator = '-'){
+
+        $accents = array('Š' => 'S', 'š' => 's', 'Ð' => 'Dj','Ž' => 'Z', 'ž' => 'z', 'À' => 'A', 'Á' => 'A', 'Â' => 'A', 'Ã' => 'A', 'Ä' => 'A', 'Å' => 'A', 'Æ' => 'A', 'Ç' => 'C', 'È' => 'E', 'É' => 'E', 'Ê' => 'E', 'Ë' => 'E', 'Ì' => 'I', 'Í' => 'I', 'Î' => 'I', 'Ï' => 'I', 'Ñ' => 'N', 'Ò' => 'O', 'Ó' => 'O', 'Ô' => 'O', 'Õ' => 'O', 'Ö' => 'O', 'Ø' => 'O', 'Ù' => 'U', 'Ú' => 'U', 'Û' => 'U', 'Ü' => 'U', 'Ý' => 'Y', 'Þ' => 'B', 'ß' => 'Ss','à' => 'a', 'á' => 'a', 'â' => 'a', 'ã' => 'a', 'ä' => 'a', 'å' => 'a', 'æ' => 'a', 'ç' => 'c', 'è' => 'e', 'é' => 'e', 'ê' => 'e', 'ë' => 'e', 'ì' => 'i', 'í' => 'i', 'î' => 'i', 'ï' => 'i', 'ð' => 'o', 'ñ' => 'n', 'ò' => 'o', 'ó' => 'o', 'ô' => 'o', 'õ' => 'o', 'ö' => 'o', 'ø' => 'o', 'ù' => 'u', 'ú' => 'u', 'û' => 'u', 'ý' => 'y', 'ý' => 'y', 'þ' => 'b', 'ÿ' => 'y', 'ƒ' => 'f');
+        $string = strtr($string, $accents);
+        $string = strtolower($string);
+        $string = preg_replace('/[^a-zA-Z0-9\s]/', '', $string);
+        $string = preg_replace('{ +}', ' ', $string);
+        $string = trim($string);
+        $string = str_replace(' ', $separator, $string);
+
+        return $string;
 
     }
 
