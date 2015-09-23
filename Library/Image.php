@@ -13,7 +13,7 @@ class Image {
 	protected $image;
 	protected $imagick;
 	protected $destination;
-	
+
 	public $_pathroot;
 
 	public function getType(){						return stripslashes($this->type);}
@@ -29,12 +29,13 @@ class Image {
 	public function __construct(){
 		$this->imagick = new \Imagick();
 	}
-	
+
 	public function init($filename, $destination = false, $quality = 100){
 		$this->quality = $quality;
 		$this->filename = $filename;
-		
+
 		// Init imagick objet with image file
+		$this->imagick->setCompressionQuality($quality);
 		$this->imagick->readImage($this->filename);
 		$this->setType(strtolower($this->imagick->getImageFormat()));
 
@@ -48,8 +49,8 @@ class Image {
 		else
 			$this->destination = $destination;
 	}
-    
-    
+
+
     public function getImageAsString(){
         ob_start();
         $this->writeImage();
@@ -99,8 +100,8 @@ class Image {
 			return $this->imagick;
 		}else{
 			if ($this->type == self::$TYPE_GIF)
-				foreach ($this->imagick as $frame) 
-					$frame->adaptiveResizeImage($width, $height, true); 
+				foreach ($this->imagick as $frame)
+					$frame->adaptiveResizeImage($width, $height, true);
 			else
 				$this->imagick->adaptiveResizeImage($width, $height, true);
 			return true;
@@ -113,29 +114,29 @@ class Image {
 
 		return array('width' => $W, 'height' => $H);
 	}
-	
+
 	public function crop($width, $height) {
 		// $format = $this->imagick->getImageFormat();
 		// if ($format == 'GIF')
 		// 	foreach ($this->imagick as $frame)
-		// 		$frame->cropImage($width, $height, ($this->imagick->getImageWidth()-$width)/2,($this->imagick->getImageHeight()-$height)/2); 	   
+		// 		$frame->cropImage($width, $height, ($this->imagick->getImageWidth()-$width)/2,($this->imagick->getImageHeight()-$height)/2);
 		// else
 		// 	$this->imagick->cropImage($width, $height, ($this->imagick->getImageWidth()-$width)/2,($this->imagick->getImageHeight()-$height)/2);
 		// return true;
 
 		$origW = $this->imagick->getImageWidth();
 		$origH = $this->imagick->getImageHeight();
-		
+
 		$widthRatio = $origW / $width;
 		$heightRatio = $origH / $height;
-		
+
 		$ratio = ($widthRatio >= $heightRatio)?$heightRatio:$widthRatio;
-		
+
 		$this->imagick->adaptiveResizeImage($origW/$ratio, $origH/$ratio, true);
 
 		// $newW = $origW * $ratio;
-		// $newH = $origH * $ratio;		
-		
+		// $newH = $origH * $ratio;
+
 		// if($ratio == $widthRatio)
 		// {
 		// 	//get the y position for the crop
@@ -147,8 +148,8 @@ class Image {
 		// 	$y = 0;
 		// 	$x = round(($origW - $width / $ratio) / 2);
 		// }
-		
-		
+
+
 		// now we know the new image's dimensions
 
 		$this->imagick->cropImage($width, $height, ($this->imagick->getImageWidth()-$width)/2, ($this->imagick->getImageHeight()-$height)/2);
@@ -157,18 +158,18 @@ class Image {
 
 	public function rotate($angle)
     {
-        $this->imagick->rotateImage(new ImagickPixel('none'), $angle); 
+        $this->imagick->rotateImage(new ImagickPixel('none'), $angle);
         return true;
-    } 
+    }
 
 	public function rounderCorner(){
-		$this->imagick->roundCorners(40,40); 
+		$this->imagick->roundCorners(40,40);
         return true;
 	}
 
     public function mirror(){
     	$this->imagick->flipImage();
 		return true;
-    }   
-    
+    }
+
 }

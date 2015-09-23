@@ -134,7 +134,7 @@ class MediaService {
         return $mediaSrc;
     }
 
-    public function createSizesCache($media, $sizes = null){
+    public function createSizesCache($media, $sizes = null, $quality = 100){
 
         if (is_int($media)) {
             $media = $this->_em->getRepository('MajesMediaBundle:Media')->findOneById($media);
@@ -158,7 +158,7 @@ class MediaService {
 
         foreach($this->_setup['sizes'] as $key => $size){
 
-            $lib_image->init($file, $destination);
+            $lib_image->init($file, $destination, $quality);
 
             list($width_origin, $height_origin) = getimagesize($media->getAbsolutePath());
             $ratio = $height_origin/$width_origin;
@@ -190,7 +190,7 @@ class MediaService {
 
     }
 
-    public function createCacheWithRatio($media, $ratio = 1, $suffix = ''){
+    public function createCacheWithRatio($media, $ratio = 1, $suffix = '', $quality = 80){
 
         if (is_int($media)) {
             $media = $this->_em->getRepository('MajesMediaBundle:Media')->findOneById($media);
@@ -223,7 +223,7 @@ class MediaService {
                 unlink($destination . $suffix . '.' . $media->getPath());
         }
 
-        $lib_image->init($file, $destination);
+        $lib_image->init($file, $destination, $quality);
         $lib_image->resize($width_new, $height_new);
         $lib_image->saveImage( $suffix . '.' . $media->getPath() );
 
