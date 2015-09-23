@@ -208,19 +208,22 @@ class MediaService {
         $file = $media->getAbsolutePath();
         $destination = $media->getCachePath();
 
-        $src = '/' . $media->getWebCacheFolder() . $suffix. '.'  . $media->getPath();
-        if (is_file($destination . $suffix . '.' . $media->getPath())){
-            return $src;
-        }
-
-        $lib_image->init($file, $destination);
-
         list($width_origin, $height_origin) = getimagesize($media->getAbsolutePath());
 
         $width_new = $width_origin * $ratio;
         $height_new = $height_origin * $ratio;
 
+        $src = '/' . $media->getWebCacheFolder() . $suffix. '.'  . $media->getPath();
+        if (is_file($destination . $suffix . '.' . $media->getPath())){
 
+            list($width_test, $height_test) = getimagesize($destination . $suffix . '.' . $media->getPath());
+            if($width_test < $width_origin && $height_test < $height_new)
+                return $src;
+            else
+                unlink($destination . $suffix . '.' . $media->getPath());
+        }
+
+        $lib_image->init($file, $destination);
         $lib_image->resize($width_new, $height_new);
         $lib_image->saveImage( $suffix . '.' . $media->getPath() );
 
