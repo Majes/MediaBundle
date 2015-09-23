@@ -190,4 +190,42 @@ class MediaService {
 
     }
 
+    public function createCacheWithRatio($media, $ratio = 1, $suffix = ''){
+
+        if (is_int($media)) {
+            $media = $this->_em->getRepository('MajesMediaBundle:Media')->findOneById($media);
+        }
+
+        if(empty($media)) return false;
+        if ($media->getType() != 'picture') return false;
+
+
+        if(!class_exists("Imagick"))
+            $lib_image = new ImageFallback();
+        else
+            $lib_image = new Image();
+
+        $file = $media->getAbsolutePath();
+        $destination = $media->getCachePath();
+
+        $src = '/' . $media->getWebCacheFolder() . $suffix. '.'  . $media->getPath();
+        if (is_file($destination . $suffix . '.' . $media->getPath())){
+            return $src;
+        }
+
+        $lib_image->init($file, $destination);
+
+        list($width_origin, $height_origin) = getimagesize($media->getAbsolutePath());
+
+        $width_new = $width_origin * $ratio;
+        $height_new = $height_origin * $ratio;
+
+
+        $lib_image->resize($width_new, $height_new);
+        $lib_image->saveImage( $suffix . '.' . $media->getPath() );
+
+        return $src;
+
+    }
+
 }
