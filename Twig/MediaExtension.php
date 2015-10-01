@@ -126,12 +126,16 @@ class MediaExtension extends \Twig_Extension
                             $lib_image = new Image();
 
                         if(is_null($width) && is_null($height))
-                            $futureFile = '';
+                            $futureFile = 'restimg.';
                         else
-                            $futureFile = $width.'x'.$height.'_';
+                            $futureFile = 'restimg.'.$width.'x'.$height.'_';
 
                         $input_filename = $media->getAbsolutePath();
                         $output_filename = $media->getCachePath().$futureFile.$mediaPath;
+                        $old_filename = $media->getCachePath().$width.'x'.$height.'_'.$mediaPath;
+
+                        if(is_file($old_filename))
+                            unlink($old_filename);
 
                         if(!is_file($output_filename) || isset($options['emptycache'])){
                             $image = new Respimg($input_filename);
