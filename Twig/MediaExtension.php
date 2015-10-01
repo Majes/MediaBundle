@@ -4,6 +4,7 @@ namespace Majes\MediaBundle\Twig;
 use Majes\MediaBundle\Entity\Media;
 use Majes\MediaBundle\Library\Image;
 use Majes\MediaBundle\Library\ImageFallback;
+use nwtn\Respimg as Respimg;
 
 class MediaExtension extends \Twig_Extension
 {
@@ -113,9 +114,34 @@ class MediaExtension extends \Twig_Extension
                     $width = $height*$width_origin/$height_origin;
                 }
 
-                    //TODO: if public, check if thumb exists, else create it, then get url
-                    if($media->getIsProtected() == 0){
-                        //check if cached file exist
+                //TODO: if public, check if thumb exists, else create it, then get url
+                if($media->getIsProtected() == 0){
+                    //check if cached file exist
+
+                    if(isset($options['optimize']) && !$crop){
+
+                        if(!class_exists("Imagick"))
+                            $lib_image = new ImageFallback();
+                        else
+                            $lib_image = new Image();
+
+                        if(is_null($width) && is_null($height))
+                            $futureFile = '';
+                        else
+                            $futureFile = $width.'x'.$height.'_';
+
+                        $input_filename = $media->getAbsolutePath();
+                        $output_filename = $media->getCachePath().$futureFile.$mediaPath;
+
+                        if(!is_file($output_filename) || isset($options['emptycache'])){
+                            $image = new Respimg($input_filename);
+                            $image->smartResize(110, 0, false);
+                            $image->writeImage($output_filename);
+                        }
+
+                        $lib_image->init($output_filename);
+                    }else{
+
                         $width = $width <= 0 ? null : $width;
                         $height = $height <= 0 ? null : $height;
 
@@ -135,7 +161,10 @@ class MediaExtension extends \Twig_Extension
                         else
                             $futureFile = $prefix.$width.'x'.$height.'_';
 
-                        if(!is_file($destination.$futureFile.$mediaPath)){
+                        if(!is_file($destination.$futureFile.$mediaPath) || isset($options['emptycache'])){
+
+                            if(is_file($destination.$futureFile.$mediaPath))
+                                unlink($destination.$futureFile.$mediaPath);
 
                             $lib_image->init($file, $destination);
 
@@ -147,23 +176,24 @@ class MediaExtension extends \Twig_Extension
                             $lib_image->saveImage($futureFile.$mediaPath);
                         }else
                         {
-                            if(isset($options['src']) && $options['src'])
-                                return '/'.$media->getWebCacheFolder().$futureFile.$mediaPath;
-
                             $lib_image->init($destination.$futureFile.$mediaPath);
                         }
 
-                        //Get width and height
-                        $sizes = $lib_image->getSize();
-                        $mediaSrc = '/'.$media->getWebCacheFolder().$futureFile.$mediaPath;
-
-                        $mediaTag = '<img width="'.$sizes['width'].'" height="'.$sizes['height'].'" src="'.$mediaSrc.'" title="'.$title.'" alt="'.$title.'"'.$css_class.$attribute_id.$attribute_data.$style.'/>';
                     }
 
-                    //TODO: if private use media/load url to generate img
-                    else if($media->getIsProtected() == 1){
-                        $mediaTag = '<img src="/media/load/'.$media->getId().'/'.$crop.'/'.$width.'/'.$height.'" width="'.$width.'" height="'.$height.'" title="'.$title.'" alt="'.$title.'"'.$css_class.$attribute_id.$attribute_data.' onerror=\'this.src="/bundles/majesmedia/img/icon-document.png"\'/>';
-                    }
+                    if(isset($options['src']) && $options['src'])
+                        return '/'.$media->getWebCacheFolder().$futureFile.$mediaPath;
+                    //Get width and height
+                    $sizes = $lib_image->getSize();
+                    $mediaSrc = '/'.$media->getWebCacheFolder().$futureFile.$mediaPath;
+
+                    $mediaTag = '<img width="'.$sizes['width'].'" height="'.$sizes['height'].'" src="'.$mediaSrc.'" title="'.$title.'" alt="'.$title.'"'.$css_class.$attribute_id.$attribute_data.$style.'/>';
+                }
+
+                //TODO: if private use media/load url to generate img
+                else if($media->getIsProtected() == 1){
+                    $mediaTag = '<img src="/media/load/'.$media->getId().'/'.$crop.'/'.$width.'/'.$height.'" width="'.$width.'" height="'.$height.'" title="'.$title.'" alt="'.$title.'"'.$css_class.$attribute_id.$attribute_data.' onerror=\'this.src="/bundles/majesmedia/img/icon-document.png"\'/>';
+                }
                 break;
 
             case 'video':
