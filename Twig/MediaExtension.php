@@ -139,7 +139,7 @@ class MediaExtension extends \Twig_Extension
 
                         if(!is_file($output_filename) || isset($options['emptycache'])){
                             $image = new Respimg($input_filename);
-                            $image->smartResize(110, 0, false);
+                            $image->smartResize($width, 0, false);
                             $image->writeImage($output_filename);
                         }
 
