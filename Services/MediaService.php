@@ -143,8 +143,6 @@ class MediaService {
         if(empty($media)) return false;
         if ($media->getType() != 'picture') return false;
 
-        $sizes = array();
-
         if(!class_exists("Imagick"))
             $lib_image = new ImageFallback();
         else
