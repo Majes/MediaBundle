@@ -6,6 +6,7 @@ use Doctrine\ORM\EntityManager;
 use Majes\MediaBundle\Entity\Media;
 use Majes\MediaBundle\Library\Image;
 use Majes\MediaBundle\Library\ImageFallback;
+use nwtn\Respimg as Respimg;
 
 class MediaService {
 
@@ -188,7 +189,7 @@ class MediaService {
 
     }
 
-    public function createCacheWithRatio($media, $ratio = 1, $suffix = '', $quality = 80){
+    public function createCacheWithRatio($media, $ratio = 1, $suffix = '', $quality = 80, $optimize = false){
 
         if (is_int($media)) {
             $media = $this->_em->getRepository('MajesMediaBundle:Media')->findOneById($media);
@@ -197,34 +198,61 @@ class MediaService {
         if(empty($media)) return false;
         if ($media->getType() != 'picture') return false;
 
-
         if(!class_exists("Imagick"))
             $lib_image = new ImageFallback();
         else
             $lib_image = new Image();
-
-        $file = $media->getAbsolutePath();
-        $destination = $media->getCachePath();
 
         list($width_origin, $height_origin) = getimagesize($media->getAbsolutePath());
 
         $width_new = $width_origin * $ratio;
         $height_new = $height_origin * $ratio;
 
-        $src = '/' . $media->getWebCacheFolder() . $suffix. '.'  . $media->getPath();
-        if (is_file($destination . $suffix . '.' . $media->getPath())){
+        $mediaPath = $media->getPath();
 
-            list($width_test, $height_test) = getimagesize($destination . $suffix . '.' . $media->getPath());
-            if($width_test < $width_origin && $height_test < $height_new)
-                return $src;
+        if($optimize){
+
+            if($ratio == 1)
+                $futureFile = 'restimg.';
             else
-                unlink($destination . $suffix . '.' . $media->getPath());
+                $futureFile = 'restimg.'.$width_new.'x'.$height_new.'_';
+
+            $input_filename = $media->getAbsolutePath();
+            $output_filename = $media->getCachePath().$futureFile.$mediaPath;
+            $old_filename = $media->getCachePath().$width_new.'x'.$height_new.'_'.$mediaPath;
+
+            if(is_file($old_filename))
+                unlink($old_filename);
+
+            if(!is_file($output_filename)){
+                $image = new Respimg($input_filename);
+                $image->smartResize($width_new, 0, false);
+                $image->writeImage($output_filename);
+            }
+
+            $lib_image->init($output_filename);
+            $src = '/'.$media->getWebCacheFolder().$futureFile.$mediaPath;
+
+        }else{
+
+            $file = $media->getAbsolutePath();
+            $destination = $media->getCachePath();
+
+            $src = '/' . $media->getWebCacheFolder() . $suffix. '.'  . $media->getPath();
+            if (is_file($destination . $suffix . '.' . $media->getPath())){
+
+                list($width_test, $height_test) = getimagesize($destination . $suffix . '.' . $media->getPath());
+                if($width_test < $width_origin && $height_test < $height_new)
+                    return $src;
+                else
+                    unlink($destination . $suffix . '.' . $media->getPath());
+            }
+
+            $lib_image->init($file, $destination, $quality);
+            $lib_image->resize($width_new, $height_new);
+            $lib_image->saveImage( $suffix . '.' . $media->getPath() );
+
         }
-
-        $lib_image->init($file, $destination, $quality);
-        $lib_image->resize($width_new, $height_new);
-        $lib_image->saveImage( $suffix . '.' . $media->getPath() );
-
         return $src;
 
     }
