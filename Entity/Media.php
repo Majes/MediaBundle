@@ -62,6 +62,11 @@ class Media
      */
     private $path=null;
 
+    /**
+     * @ORM\Column(name="realpath", type="string", length=255, nullable=true)
+     */
+    private $realpath=null;
+
     private $pathForced=null;
 
     private $file;
@@ -186,6 +191,14 @@ class Media
     public function getPath()
     {
         return $this->path;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getRealpath()
+    {
+        return $this->realpath;
     }
 
     /**
@@ -366,6 +379,15 @@ class Media
     /**
      * @inheritDoc
      */
+    public function setRealpath($realpath)
+    {
+        $this->realpath = $realpath;
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function setPathForced($pathForced)
     {
         $this->pathForced = $pathForced;
@@ -418,6 +440,7 @@ class Media
             // do whatever you want to generate a unique name
             $filename = sha1(uniqid(mt_rand(), true));
             $this->path = empty($this->pathForced) ? $filename.'.'.$this->getFile()->guessExtension() : $this->pathForced;
+            $this->realpath = $this->getFile()->getClientOriginalName();
         }
     }
 
@@ -581,6 +604,7 @@ class Media
         }
         rmdir($dir);
     }
+
     /**
      *
      * @ORM\PrePersist
