@@ -336,7 +336,7 @@ class Media
      *
      * @param UploadedFile $file
      */
-    public function setFileFromUrl($url)
+    public function setFileFromUrl($url, $realpath = null)
     {
         $tempId = uniqid();
         $rootDir = __DIR__.'/../../../../../../web';
@@ -361,6 +361,9 @@ class Media
         } catch (FileNotFoundException $ex) {
             throw new TransformationFailedException($ex->getMessage());
         }
+
+        if(!is_null($realpath)) $this->realpath = $realpath;
+
         $this->setFile($uploadedFile);
 
         //unlink($path);
@@ -440,7 +443,11 @@ class Media
             // do whatever you want to generate a unique name
             $filename = sha1(uniqid(mt_rand(), true));
             $this->path = empty($this->pathForced) ? $filename.'.'.$this->getFile()->guessExtension() : $this->pathForced;
-            $this->realpath = $this->getFile()->getClientOriginalName();
+            $file = $this->getFile();
+            if($file instanceof \Symfony\Component\HttpFoundation\File\UploadedFile){
+                $this->realpath = is_null($this->realpath) ? $this->getFile()->getClientOriginalName() : $this->realpath;
+            }
+
         }
     }
 
