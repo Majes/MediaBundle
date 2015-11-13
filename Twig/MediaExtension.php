@@ -64,6 +64,7 @@ class MediaExtension extends \Twig_Extension
         $attribute_data = '';
         $style = isset($options['style']) ? ' style="'.$options['style'].'"' : '';
         $title = isset($options['title']) ? $options['title'] : $media->getTitle();
+        $quality = isset($options['quality']) ? $options['quality'] : 90;
 
         $path = isset($options['path']) ? $options['path'] : null;
         $mediaPath = is_null($path) ? $media->getPath() : $path;
@@ -170,7 +171,7 @@ class MediaExtension extends \Twig_Extension
                             if(is_file($destination.$futureFile.$mediaPath))
                                 unlink($destination.$futureFile.$mediaPath);
 
-                            $lib_image->init($file, $destination);
+                            $lib_image->init($file, $destination, $quality);
 
                             if($crop)
                                 $lib_image->crop($width, $height);

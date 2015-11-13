@@ -30,12 +30,11 @@ class Image {
 		$this->imagick = new \Imagick();
 	}
 
-	public function init($filename, $destination = false, $quality = 100){
+	public function init($filename, $destination = false, $quality = 90){
 		$this->quality = $quality;
 		$this->filename = $filename;
 
 		// Init imagick objet with image file
-		$this->imagick->setCompressionQuality($quality);
 		$this->imagick->readImage($this->filename);
 		$this->setType(strtolower($this->imagick->getImageFormat()));
 
@@ -44,12 +43,37 @@ class Image {
 		//else
 		//	$this->imagick->setImageColorspace(13);
 
+		//Set orientation
+		$this->imagick = $this->autoRotateImage($this->imagick);
+
 		if(!$destination)
 			$this->destination = 'pictures';
 		else
 			$this->destination = $destination;
 	}
 
+
+	function autoRotateImage($image) {
+	    $orientation = $image->getImageOrientation();
+
+	    switch($orientation) {
+	        case \Imagick::ORIENTATION_BOTTOMRIGHT:
+	            $image->rotateimage("#000", 180); // rotate 180 degrees
+	        break;
+
+	        case \Imagick::ORIENTATION_RIGHTTOP:
+	            $image->rotateimage("#000", 90); // rotate 90 degrees CW
+	        break;
+
+	        case \Imagick::ORIENTATION_LEFTBOTTOM:
+	            $image->rotateimage("#000", -90); // rotate 90 degrees CCW
+	        break;
+	    }
+
+	    // Now that it's auto-rotated, make sure the EXIF data is correct in case the EXIF gets saved with the image!
+	    $image->setImageOrientation(\Imagick::ORIENTATION_TOPLEFT);
+		return $image;
+	}
 
     public function getImageAsString(){
         ob_start();
@@ -85,7 +109,9 @@ class Image {
 				$this->imagick->writeImages($this->destination.$imageName, true);
 			else{
 				$this->imagick->setImageCompression(\Imagick::COMPRESSION_JPEG);
-                		$this->imagick->setImageCompressionQuality($this->quality);
+                $this->imagick->setImageCompressionQuality($this->quality);
+				//$this->imagick->setInterlaceScheme(\Imagick::INTERLACE_NO);
+				//$this->imagick->setImageDepth(8);
 				$this->imagick->writeImage($this->destination.$imageName);
 			}
 			return true;
@@ -102,8 +128,19 @@ class Image {
 			if ($this->type == self::$TYPE_GIF)
 				foreach ($this->imagick as $frame)
 					$frame->adaptiveResizeImage($width, $height, true);
-			else
-				$this->imagick->adaptiveResizeImage($width, $height, true);
+			else{
+				$d = $this->imagick->getImageGeometry();
+				$w = $d['width'];
+				$h = $d['height'];
+
+				$ratioW = $width/$w;
+				$ratioH = $height/$h;
+
+				if($ratioW >= $ratioH && $width >= $w*$ratioW && $height >= $h*$ratioW) $ratio = $ratioW;
+				else $ratio = $ratioH;
+
+				$this->imagick->resizeImage($w*$ratio, $h*$ratio, \Imagick::FILTER_TRIANGLE, 1);
+			}
 			return true;
 		}
 	}
@@ -132,7 +169,7 @@ class Image {
 
 		$ratio = ($widthRatio >= $heightRatio)?$heightRatio:$widthRatio;
 
-		$this->imagick->adaptiveResizeImage($origW/$ratio, $origH/$ratio, true);
+		$this->imagick->resizeImage($origW/$ratio, $origH/$ratio, \Imagick::FILTER_TRIANGLE, 1);
 
 		// $newW = $origW * $ratio;
 		// $newH = $origH * $ratio;
