@@ -139,6 +139,8 @@ class Image {
 				if($ratioW >= $ratioH && $width >= $w*$ratioW && $height >= $h*$ratioW) $ratio = $ratioW;
 				else $ratio = $ratioH;
 
+				if($ratio > 1) $ratio = 1;
+
 				$this->imagick->resizeImage($w*$ratio, $h*$ratio, \Imagick::FILTER_TRIANGLE, 1);
 			}
 			return true;
