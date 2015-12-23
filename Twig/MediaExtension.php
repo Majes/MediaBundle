@@ -177,6 +177,9 @@ class MediaExtension extends \Twig_Extension
                                 $lib_image->crop($width, $height);
                             elseif(!is_null($width) && !is_null($height))
                                 $lib_image->resize($width, $height);
+                                
+                            if(isset($options['sharpen']))
+                                $lib_image->sharpenImage();
 
                             $lib_image->saveImage($futureFile.$mediaPath);
                         }else

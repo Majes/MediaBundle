@@ -52,6 +52,12 @@ class Image {
 			$this->destination = $destination;
 	}
 
+	public function sharpenImage($radius = 2, $sigma = 1){
+
+		$this->imagick->sharpenImage($radius, $sigma);
+
+	}
+
 
 	function autoRotateImage($image) {
 	    $orientation = $image->getImageOrientation();

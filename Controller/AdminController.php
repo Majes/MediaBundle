@@ -21,7 +21,7 @@ class AdminController extends Controller implements SystemController
      */
     public function listAction($context)
     {
-        $_results_per_page = 20; 
+        $_results_per_page = 20;
 
         $request = $this->getRequest();
 
@@ -46,7 +46,7 @@ class AdminController extends Controller implements SystemController
 
         $loadmore = count($medias) > $_results_per_page ? true : false;
         count($medias) > $_results_per_page ? array_pop($medias) : $medias;
-        
+
         //Get all folders
         $all_folders =  $em->getRepository('MajesMediaBundle:Media')->listFolders();
 
@@ -114,7 +114,7 @@ class AdminController extends Controller implements SystemController
         }
 
         $pageSubTitle = empty($media) ? $this->_translator->trans('Add a new media') : $this->_translator->trans('Edit media') . ' ' . $media->getTitle();
-        
+
 
         return $this->render('MajesMediaBundle:Admin:edit.html.twig', array(
             'pageTitle' => $this->_translator->trans('Media management'),
@@ -164,7 +164,7 @@ class AdminController extends Controller implements SystemController
         }
 
         $pageSubTitle = empty($media) ? $this->_translator->trans('Add a new media') : $this->_translator->trans('Edit media') . ' ' . $media->getTitle();
-        
+
 
         return $this->render('MajesMediaBundle:Admin:multipleEdit.html.twig', array(
             'pageTitle' => $this->_translator->trans('Media management'),
@@ -203,7 +203,7 @@ class AdminController extends Controller implements SystemController
      */
     public function mediapickerAction($context){
 
-        $_results_per_page = 20; 
+        $_results_per_page = 20;
 
         $request = $this->getRequest();
 
@@ -230,7 +230,7 @@ class AdminController extends Controller implements SystemController
 
         $loadmore = count($medias) > $_results_per_page ? true : false;
         count($medias) > $_results_per_page ? array_pop($medias) : $medias;
-        
+
         //Get all folders
         $all_folders =  $em->getRepository('MajesMediaBundle:Media')->listFolders();
 
@@ -257,10 +257,10 @@ class AdminController extends Controller implements SystemController
                 'ref' => $ref
                 ));
 
-        
+
 
 
     }
 
-   
+
 }
