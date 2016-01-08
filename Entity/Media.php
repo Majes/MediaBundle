@@ -351,7 +351,7 @@ class Media
      *
      * @param UploadedFile $file
      */
-    public function setFileFromUrl($url, $realpath = null)
+    public function setFileFromUrl($url, $realpath = null, $copy = false)
     {
         $tempId = uniqid();
         $rootDir = __DIR__.'/../../../../../../web';
@@ -365,8 +365,13 @@ class Media
         $path = $rootDir.'/temp/'.$today.'/'.$tempId.'.'.pathinfo($url, PATHINFO_EXTENSION);
         //$this->tempPath = $path;
 
-        if (!file_put_contents($path, file_get_contents($url)))
-            return false;
+        if($copy && file_exists($url)){
+            copy($url, $path);
+        }
+        else{
+            if(!file_put_contents($path, file_get_contents($url)))
+                return false;
+        }
 
         $pathinfo = pathinfo($path);
         $basename = $pathinfo['basename'];
