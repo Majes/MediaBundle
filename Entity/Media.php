@@ -93,6 +93,13 @@ class Media
     private $updateDate;
 
     /**
+     * @var integer
+     *
+     * @ORM\Column(name="external_id", type="integer", nullable=true)
+     */
+    private $externalId;
+
+    /**
      * @DataTable(isTranslatable=0, hasAdd=1, hasPreview=0, isDatatablejs=0)
      */
     public function __construct(){
@@ -231,6 +238,14 @@ class Media
     public function getUpdateDate()
     {
         return $this->updateDate;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getExternalId()
+    {
+        return $this->externalId;
     }
 
     /**
@@ -430,6 +445,15 @@ class Media
     public function setUpdateDate($updateDate)
     {
         $this->updateDate = $updateDate;
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setExternalId($externalId)
+    {
+        $this->externalId = $externalId;
         return $this;
     }
 
