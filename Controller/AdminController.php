@@ -7,6 +7,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use JMS\SecurityExtraBundle\Annotation\Secure;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Request;
 
 use Majes\MediaBundle\Entity\Media;
 
@@ -19,11 +20,9 @@ class AdminController extends Controller implements SystemController
      * @Secure(roles="ROLE_MEDIA_LIST,ROLE_SUPERADMIN")
      *
      */
-    public function listAction($context)
+    public function listAction(Request $request, $context)
     {
         $_results_per_page = 20;
-
-        $request = $this->getRequest();
 
         $types = $request->get('types');
         $folders = $request->get('folders');
@@ -75,9 +74,8 @@ class AdminController extends Controller implements SystemController
      * @Secure(roles="ROLE_MEDIA_EDIT,ROLE_SUPERADMIN")
      *
      */
-    public function editAction($id, $context)
+    public function editAction(Request $request, $id, $context)
     {
-        $request = $this->getRequest();
 
         $em = $this->getDoctrine()->getManager();
         $media = $em->getRepository('MajesMediaBundle:Media')
@@ -127,9 +125,8 @@ class AdminController extends Controller implements SystemController
      * @Secure(roles="ROLE_MEDIA_EDIT,ROLE_SUPERADMIN")
      *
      */
-    public function multipleEditAction($context)
+    public function multipleEditAction(Request $request, $context)
     {
-        $request = $this->getRequest();
 
         $em = $this->getDoctrine()->getManager();
         $media = null;
@@ -178,8 +175,7 @@ class AdminController extends Controller implements SystemController
      * @Secure(roles="ROLE_MEDIA_REMOVE,ROLE_SUPERADMIN")
      *
      */
-    public function deleteAction($id, $context){
-        $request = $this->getRequest();
+    public function deleteAction(Request $request, $id, $context){
 
         $em = $this->getDoctrine()->getManager();
         $media = $em->getRepository('MajesMediaBundle:Media')
@@ -201,11 +197,9 @@ class AdminController extends Controller implements SystemController
      * @Secure(roles="ROLE_MEDIA_LIST,ROLE_SUPERADMIN")
      *
      */
-    public function mediapickerAction($context){
+    public function mediapickerAction(Request $request, $context){
 
         $_results_per_page = 20;
-
-        $request = $this->getRequest();
 
         $types = $request->get('types');
         $folders = $request->get('folders');

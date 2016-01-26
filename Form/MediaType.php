@@ -1,4 +1,4 @@
-<?php 
+<?php
 namespace Majes\MediaBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
@@ -39,7 +39,7 @@ class MediaType extends AbstractType {
             $builder->add('is_protected', 'checkbox', array('required' => false));
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver) {
+    public function configureOptions(OptionsResolverInterface $resolver) {
         $resolver->setDefaults(array(
             'data_class'      => 'Majes\MediaBundle\Entity\Media',
             'title'           => true,

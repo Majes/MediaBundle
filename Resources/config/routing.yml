@@ -1,8 +1,8 @@
 _media_load:
-    pattern:  /media/load/{id}/{crop}/{width}/{height}
+    path:  /media/load/{id}/{crop}/{width}/{height}
     defaults: { _controller: MajesMediaBundle:Media:load, crop: 0, width: null, height: null}
 
 
 _media_download:
-    pattern:  /media/download/{id}
+    path:  /media/download/{id}
     defaults: { _controller: MajesMediaBundle:Media:download}

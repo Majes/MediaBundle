@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace Majes\MediaBundle\Form\Extension;
 
@@ -25,7 +25,7 @@ class ImageTypeExtension extends AbstractTypeExtension
      *
      * @param OptionsResolverInterface $resolver
      */
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setOptional(array('media_id'));
     }

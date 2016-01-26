@@ -7,6 +7,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use JMS\SecurityExtraBundle\Annotation\Secure;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Request;
 
 use Majes\MediaBundle\Entity\Media;
 use Majes\MediaBundle\Library\Image;
@@ -15,14 +16,13 @@ use Majes\MediaBundle\Library\Image;
 class MediaController extends Controller implements SystemController
 {
 
-    public function loadAction($id, $crop, $width, $height)
+    public function loadAction(Request $request, $id, $crop, $width, $height)
     {
         /*
          * The action's view can be rendered using render() method
          * or @Template annotation as demonstrated in DemoController.
          *
          */
-        $request = $this->getRequest();
 
         $width = $width <= 0 ? null : $width;
         $height = $height <= 0 ? null : $height;
@@ -48,7 +48,7 @@ class MediaController extends Controller implements SystemController
                 $lib_image->resize($width, $height);
             $lib_image->saveImage($prefix.$width.'x'.$height.'_'.$media->getPath());
         }
-       
+
         $lib_image->writeImage();
         return new Response();
     }
@@ -61,16 +61,16 @@ class MediaController extends Controller implements SystemController
 
         if(is_null($media))
             throw $this->createNotFoundException('The file does not exist');
-        
-        $file = $media->getAbsolutePath(); 
+
+        $file = $media->getAbsolutePath();
 
         $ext = pathinfo($file, PATHINFO_EXTENSION);
 
-        header("Content-Description: File Transfer"); 
-        header("Content-Type: application/octet-stream"); 
-        header("Content-Disposition: attachment; filename=\"".$media->getTitle().".".$ext."\""); 
-        
-        readfile ($file); 
+        header("Content-Description: File Transfer");
+        header("Content-Type: application/octet-stream");
+        header("Content-Disposition: attachment; filename=\"".$media->getTitle().".".$ext."\"");
+
+        readfile ($file);
 
         return new Response();
     }
