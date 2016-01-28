@@ -83,8 +83,16 @@ class MediaService {
                 //TODO: if public, check if thumb exists, else create it, then get url
                 if ($media->getIsProtected() == 0) {
                     //check if cached file exist
-                    $width = $width <= 0 ? null : $width;
-                    $height = $height <= 0 ? null : $height;
+                    if ( $height == "auto" && !is_null($width) ) {
+                        list($width_origin, $height_origin) = getimagesize($media->getAbsolutePath());
+                        $height = $width*$height_origin/$width_origin;
+                    }
+
+                    // Preserve aspect ratio on with auto parameter on width
+                    if ( $width == "auto" && !is_null($height) ) {
+                        list($width_origin, $height_origin) = getimagesize($media->getAbsolutePath());
+                        $width = $height*$width_origin/$height_origin;
+                    }
 
                     $prefix = $crop ? 'crop.' : '';
 
