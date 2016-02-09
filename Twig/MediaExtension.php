@@ -67,7 +67,8 @@ class MediaExtension extends \Twig_Extension
         $quality = isset($options['quality']) ? $options['quality'] : 90;
 
         $path = isset($options['path']) ? $options['path'] : null;
-        $mediaPath = is_null($path) ? $media->getPath() : $path;
+        $realPath = isset($options['realpath']) ? $media->getRealpath() : $path;
+        $mediaPath = is_null($realPath) ? $media->getPath() : $realPath;
 
 
         if (isset($options['data'])){
@@ -164,7 +165,7 @@ class MediaExtension extends \Twig_Extension
                         if(is_null($width) && is_null($height))
                             $futureFile = '';
                         else
-                            $futureFile = $prefix.$width.'x'.$height.'_';
+                            $futureFile = $prefix.floor($width).'x'.floor($height).'_';
 
                         if(!is_file($destination.$futureFile.$mediaPath) || isset($options['emptycache'])){
 
@@ -177,7 +178,7 @@ class MediaExtension extends \Twig_Extension
                                 $lib_image->crop($width, $height);
                             elseif(!is_null($width) && !is_null($height))
                                 $lib_image->resize($width, $height);
-                                
+
                             if(isset($options['sharpen']))
                                 $lib_image->sharpenImage();
 
