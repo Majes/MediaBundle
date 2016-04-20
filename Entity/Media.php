@@ -13,7 +13,9 @@ use Majes\CoreBundle\Entity\User\User;
 /**
  * @ORM\Entity(repositoryClass="Majes\MediaBundle\Entity\MediaRepository")
  * @ORM\Table(name="media", indexes={
- *      @ORM\Index(name="external_id", columns={"external_id"})
+ *      @ORM\Index(name="external_id", columns={"external_id"}),
+ *      @ORM\Index(name="type", columns={"type"}),
+ *      @ORM\Index(name="folder", columns={"folder"})
  * })
  * @ORM\HasLifecycleCallbacks
  */
