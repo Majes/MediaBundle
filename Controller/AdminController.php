@@ -58,8 +58,8 @@ class AdminController extends Controller implements SystemController
                 ));
         }else
             return $this->render('MajesMediaBundle:Admin:list.html.twig', array(
-                'pageTitle' => $this->_translator->trans('Media management'),
-                'pageSubTitle' => $this->_translator->trans('List of all media created'),
+                'pageTitle' => $this->_translator->trans('Media management', array(), 'admin'),
+                'pageSubTitle' => $this->_translator->trans('List of all media created', array(), 'admin'),
                 'medias' => $medias,
                 'folders' => $folders,
                 'all_folders' => $all_folders,
@@ -111,11 +111,11 @@ class AdminController extends Controller implements SystemController
             }
         }
 
-        $pageSubTitle = empty($media) ? $this->_translator->trans('Add a new media') : $this->_translator->trans('Edit media') . ' ' . $media->getTitle();
+        $pageSubTitle = empty($media) ? $this->_translator->trans('Add a new media', array(), 'admin') : $this->_translator->trans('Edit media', array(), 'admin') . ' ' . $media->getTitle();
 
 
         return $this->render('MajesMediaBundle:Admin:edit.html.twig', array(
-            'pageTitle' => $this->_translator->trans('Media management'),
+            'pageTitle' => $this->_translator->trans('Media management', array(), 'admin'),
             'pageSubTitle' => $pageSubTitle,
             'context' => $context,
             'form' => $form->createView()));
@@ -160,11 +160,11 @@ class AdminController extends Controller implements SystemController
 
         }
 
-        $pageSubTitle = empty($media) ? $this->_translator->trans('Add a new media') : $this->_translator->trans('Edit media') . ' ' . $media->getTitle();
+        $pageSubTitle = empty($media) ? $this->_translator->trans('Add a new media', array(), 'admin') : $this->_translator->trans('Edit media', array(), 'admin') . ' ' . $media->getTitle();
 
 
         return $this->render('MajesMediaBundle:Admin:multipleEdit.html.twig', array(
-            'pageTitle' => $this->_translator->trans('Media management'),
+            'pageTitle' => $this->_translator->trans('Media management', array(), 'admin'),
             'pageSubTitle' => $pageSubTitle,
             'context' => $context,
             // 'form' => $form->createView()
@@ -239,8 +239,8 @@ class AdminController extends Controller implements SystemController
                 ));
         }else
             return $this->render('MajesMediaBundle:Admin:mediapicker.html.twig', array(
-                'pageTitle' => $this->_translator->trans('Media management'),
-                'pageSubTitle' => $this->_translator->trans('List of all media created'),
+                'pageTitle' => $this->_translator->trans('Media management', array(), 'admin'),
+                'pageSubTitle' => $this->_translator->trans('List of all media created', array(), 'admin'),
                 'medias' => $medias,
                 'folders' => $folders,
                 'types' => $types,
