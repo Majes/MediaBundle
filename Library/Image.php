@@ -44,7 +44,7 @@ class Image {
 		//	$this->imagick->setImageColorspace(13);
 
 		//Set orientation
-		if($autoRotate) $this->imagick = $this->autoRotateImage($this->imagick);
+		$this->imagick = $this->autoRotateImage($this->imagick);
 
 		if(!$destination)
 			$this->destination = 'pictures';
