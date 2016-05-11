@@ -44,7 +44,7 @@ class Image {
 		//	$this->imagick->setImageColorspace(13);
 
 		//Set orientation
-		$this->imagick = $this->autoRotateImage($this->imagick);
+		$isRotated = $this->autoRotateImage($this->imagick);
 
 		if(!$destination)
 			$this->destination = 'pictures';
@@ -87,12 +87,10 @@ class Image {
 	}
 
 	public function checkOrientation($file){
-		$imagick = new \Imagick();
-		$imagick->readImage($file);
-		$imagick = $this->autoRotateImage($imagick);
-		if($imagick){
+		$this->imagick->readImage($file);
+		if($this->autoRotateImage($this->imagick)){
 			//empty cache
-			$imagick->writeImage();
+			$this->imagick->writeImage();
 			return true;
 		}
 		return false;
