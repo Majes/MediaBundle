@@ -44,7 +44,7 @@ class Image {
 		//	$this->imagick->setImageColorspace(13);
 
 		//Set orientation
-		$this->imagick = $this->autoRotateImage($this->imagick);
+		if($autoRotate) $this->imagick = $this->autoRotateImage($this->imagick);
 
 		if(!$destination)
 			$this->destination = 'pictures';
@@ -65,20 +65,37 @@ class Image {
 	    switch($orientation) {
 	        case \Imagick::ORIENTATION_BOTTOMRIGHT:
 	            $image->rotateimage("#000", 180); // rotate 180 degrees
+				$image->setImageOrientation(\Imagick::ORIENTATION_TOPLEFT);
+				return $image;
 	        break;
 
 	        case \Imagick::ORIENTATION_RIGHTTOP:
 	            $image->rotateimage("#000", 90); // rotate 90 degrees CW
+				$image->setImageOrientation(\Imagick::ORIENTATION_TOPLEFT);
+				return $image;
 	        break;
 
 	        case \Imagick::ORIENTATION_LEFTBOTTOM:
 	            $image->rotateimage("#000", -90); // rotate 90 degrees CCW
+				$image->setImageOrientation(\Imagick::ORIENTATION_TOPLEFT);
+				return $image;
 	        break;
 	    }
 
 	    // Now that it's auto-rotated, make sure the EXIF data is correct in case the EXIF gets saved with the image!
-	    $image->setImageOrientation(\Imagick::ORIENTATION_TOPLEFT);
-		return $image;
+		return false;
+	}
+
+	public function checkOrientation($file){
+		$imagick = new \Imagick();
+		$imagick->readImage($file);
+		$imagick = $this->autoRotateImage($imagick);
+		if($imagick){
+			//empty cache
+			$imagick->writeImage();
+			return true;
+		}
+		return false;
 	}
 
     public function getImageAsString(){
