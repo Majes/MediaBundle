@@ -66,18 +66,21 @@ class Image {
 	        case \Imagick::ORIENTATION_BOTTOMRIGHT:
 	            $image->rotateimage("#000", 180); // rotate 180 degrees
 				$image->setImageOrientation(\Imagick::ORIENTATION_TOPLEFT);
+				$image->writeImage();
 				return $image;
 	        break;
 
 	        case \Imagick::ORIENTATION_RIGHTTOP:
 	            $image->rotateimage("#000", 90); // rotate 90 degrees CW
 				$image->setImageOrientation(\Imagick::ORIENTATION_TOPLEFT);
+				$image->writeImage();
 				return $image;
 	        break;
 
 	        case \Imagick::ORIENTATION_LEFTBOTTOM:
 	            $image->rotateimage("#000", -90); // rotate 90 degrees CCW
 				$image->setImageOrientation(\Imagick::ORIENTATION_TOPLEFT);
+				$image->writeImage();
 				return $image;
 	        break;
 	    }
